@@ -1,0 +1,100 @@
+def githubRepo = 'https://github.com/amaneux/Aicon-Tos-Mediator.git'
+def buildNumber = env.BUILD_NUMBER ?: "dev-build"
+
+pipeline {
+    agent any
+    environment {
+        DOCKER_IMAGE = "avlino/aicon-tos-mediator"
+        IMAGE_TAG = "0.1.Snapshot.${BUILD_NUMBER}"  // Versioned tag using BUILD_NUMBER
+        WAR_FILE_NAME = "aicon-tos-mediator-1.0-SNAPSHOT.war"
+    }
+
+    parameters {
+
+        string(name: 'githubBranch', defaultValue: 'test-phase', description: 'Branch name e.g. develop', trim: true)
+        choice(name: 'REMOTE_HOST', choices: [
+            'devops-kafka.avlino.az', 'pac-sandbox-kafka.avlino.az', 'pac-int-kafka.avlino.az',
+            'pac-qa-kafka.avlino.az', 'pac-prod-parallel-kafka.avlino.az', 'pac-prod-kafka.avlino.az',
+            'pnc-int-2-kafka.avlino.az', 'pnc-uat-kafka.avlino.az', 'pnc-prod-parallel-kafka.avlino.az',
+            'vit-dev-kafka.avlino.az', 'vit-qa-kafka.avlino.az',
+            'rwg-dev-kafka.avlino.az', 'rwg-qa-kafka.avlino.az', 'rwg-prod-parallel-kafka.avlino.az',
+            'rwg-prod-kafka.avlino.az', 'rwg-uat-kafka.avlino.az', 'dct-dev-kafka.avlino.az',
+            'dct-prod-kafka.avlino.az','dct-prod-parallel-kafka.avlino.az','bmt-dev-kafka.avlino.az',
+            'bmt-prod-kafka.avlino.az','bmt-prod-parallel-kafka.avlino.az','tra-dev-kafka.avlino.az',
+            'tra-prod-kafka.avlino.az','tra-prod-parallel-kafka.avlino.az'
+        ], description: 'Select the target server')
+        choice(name: 'AICON_TERMINAL', choices: [
+            'DCT', 'PAC', 'PNC',
+            'BMT', 'RWG', 'TRA',
+            'VIT'
+        ], description: 'Select the Client')
+        choice(name: 'AICON_ENVIRONMENT', choices: [
+            'DEV', 'PROD-PARALLEL', 'PROD'
+        ], description: 'Select the Client')
+    }
+
+    stages {
+        stage('Remote SSH') {
+            steps {
+                script {
+                    try {
+                        withCredentials([usernamePassword(
+                            credentialsId: 'avlino_builder_personal_access_token',
+                            passwordVariable: 'GIT_PASSWORD',
+                            usernameVariable: 'GIT_USERNAME'
+                        )]) {
+                            sshagent(['devops-cdc']) {
+sh """
+    ssh -o StrictHostKeyChecking=no -l deckysystem ${params.REMOTE_HOST} << 'EOF'
+set -xe
+
+cd /home/deckysystem
+sudo rm -rf Aicon-Tos-Mediator
+
+git clone --branch '${params.githubBranch}' https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/amaneux/Aicon-Tos-Mediator.git
+cd Aicon-Tos-Mediator
+
+echo "Stopping existing aicon-tos-mediator..."
+CONTAINERS=\$(docker ps -q --filter "name=aicon-tos-mediator")
+if [ -n "\$CONTAINERS" ]; then
+    docker stop \$CONTAINERS || true
+    docker rm \$CONTAINERS || true
+fi
+
+CLIENT=${params.AICON_TERMINAL} \\
+AICON_ENVIRONMENT=${params.AICON_ENVIRONMENT} \\
+KAFKA_BOOTSTRAP_SERVERS=${params.REMOTE_HOST} \\
+AICON_TERMINAL=${params.AICON_TERMINAL} \\
+
+
+# Environment File Construction
+printf "
+CLIENT=${params.AICON_TERMINAL}
+AICON_ENVIRONMENT=${params.AICON_ENVIRONMENT}
+KAFKA_BOOTSTRAP_SERVERS=${params.REMOTE_HOST}
+AICON_TERMINAL=${params.AICON_TERMINAL}
+" > .env
+
+
+
+printf "Removing Docker image..."
+docker rmi avlino/aicon-tos-mediator
+printf "Removed image: avlino/aicon-tos-mediator"
+
+docker-compose -f docker-compose-deploy.yml up -d
+
+set +xe
+EOF
+"""
+                            }
+                        }
+                    } catch (Exception e) {
+                        echo "Error in remote operations: ${e.getMessage()}"
+                        currentBuild.result = 'FAILURE'
+                        error("Stopping build due to failure in remote operations")
+                    }
+                }
+            }
+        }
+    }
+}
