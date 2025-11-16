@@ -1,0 +1,22 @@
+#version: '3.8'
+
+services:
+  tomcat:
+    image: avlino/aicon-tos-mediator:latest
+    container_name: aicon-tos-mediator
+    environment:
+      - CATALINA_OPTS=-Djava.awt.headless=true -Xms512m -Xmx2048m
+      - KAFKA_BOOTSTRAP_SERVERS=${KAFKA_BOOTSTRAP_SERVERS}
+      - CLIENT=${CLIENT}
+      - AICON_TERMINAL=${AICON_TERMINAL}
+      - AICON_ENVIRONMENT=${AICON_ENVIRONMENT}
+    ports:
+      - "8078:8080"
+    volumes:
+      - ./src/main/resources/client_configurations/${CLIENT}/:/usr/local/tomcat/conf/mediator
+    networks:
+      - internal_network
+
+networks:
+  internal_network:
+    driver: bridge

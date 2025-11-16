@@ -1,0 +1,171 @@
+services:
+  zookeeper-1:
+    image: confluentinc/cp-zookeeper:7.4.1
+    hostname: zookeeper-1
+    container_name: zookeeper-1
+    networks:
+      - kafka-network
+    volumes:
+      - ./kafka/zookeeper-1_data:/var/lib/zookeeper/data
+      - ./kafka/zookeeper-1_log:/var/lib/zookeeper/log
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=zookeeper-1:2888:3888;2181 server.2=zookeeper-2:2888:3888;2181 server.3=zookeeper-3:2888:3888;2181
+    restart: always
+
+  zookeeper-2:
+    image: confluentinc/cp-zookeeper:7.4.1
+    hostname: zookeeper-2
+    container_name: zookeeper-2
+    networks:
+      - kafka-network
+    volumes:
+      - ./kafka/zookeeper-2_data:/var/lib/zookeeper/data
+      - ./kafka/zookeeper-2_log:/var/lib/zookeeper/log
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOO_MY_ID: 2
+      ZOO_SERVERS: server.1=zookeeper-1:2888:3888;2181 server.2=zookeeper-2:2888:3888;2181 server.3=zookeeper-3:2888:3888;2181
+    restart: always
+
+  zookeeper-3:
+    image: confluentinc/cp-zookeeper:7.4.1
+    hostname: zookeeper-3
+    container_name: zookeeper-3
+    networks:
+      - kafka-network
+    volumes:
+      - ./kafka/zookeeper-3_data:/var/lib/zookeeper/data
+      - ./kafka/zookeeper-3_log:/var/lib/zookeeper/log
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOO_MY_ID: 3
+      ZOO_SERVERS: server.1=zookeeper-1:2888:3888;2181 server.2=zookeeper-2:2888:3888;2181 server.3=zookeeper-3:2888:3888;2181
+    restart: always
+
+  broker-1:
+    image: confluentinc/cp-kafka:7.4.1
+    hostname: broker-1
+    container_name: broker-1
+    networks:
+      - kafka-network
+    volumes:
+      - ./kafka/broker-1-data:/var/lib/kafka/data
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+    ports:
+      - 9091:9091
+      - 29091:29091
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker-1:29091,PLAINTEXT_HOST://192.168.1.147:9091
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_SNAPSHOT_TRUST_EMPTY: true
+      KAFKA_DELETE_TOPIC_ENABLE: true
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+    restart: always
+
+  broker-2:
+    image: confluentinc/cp-kafka:7.4.1
+    hostname: broker-2
+    container_name: broker-2
+    networks:
+      - kafka-network
+    volumes:
+      - ./kafka/broker-2-data:/var/lib/kafka/data
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+      - broker-1
+    ports:
+      - 9093:9093
+      - 29093:29093
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker-2:29093,PLAINTEXT_HOST://192.168.1.147:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_SNAPSHOT_TRUST_EMPTY: true
+      KAFKA_DELETE_TOPIC_ENABLE: true
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+    restart: always
+
+  broker-3:
+    image: confluentinc/cp-kafka:7.4.1
+    hostname: broker-3
+    container_name: broker-3
+    networks:
+      - kafka-network
+    volumes:
+      - ./kafka/broker-3-data:/var/lib/kafka/data
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+      - broker-1
+      - broker-2
+    ports:
+      - 9094:9094
+      - 29094:29094
+    environment:
+      KAFKA_BROKER_ID: 3
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker-3:29094,PLAINTEXT_HOST://192.168.1.147:9094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_SNAPSHOT_TRUST_EMPTY: true
+      KAFKA_DELETE_TOPIC_ENABLE: true
+    restart: always
+
+  rest-proxy:
+    image: confluentinc/cp-kafka-rest:7.4.1
+    hostname: rest-proxy
+    container_name: rest-proxy
+    networks:
+      - kafka-network
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+      - broker-1
+      - broker-2
+      - broker-3
+    ports:
+      - "8082:8082"
+    environment:
+      KAFKA_REST_HOST_NAME: rest-proxy
+      KAFKA_REST_BOOTSTRAP_SERVERS: 'broker-1:29091,broker-2:29093,broker-3:29094'
+      KAFKA_REST_LISTENERS: "http://0.0.0.0:8082"
+    restart: always
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:7.4.1
+    hostname: schema-registry
+    container_name: schema-registry
+    networks:
+      - kafka-network
+    depends_on:
+      - broker-1
+      - broker-2
+      - broker-3
+    ports:
+      - "8081:8081"
+    environment:
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'broker-1:29091,broker-2:29093,broker-3:29094'
+      SCHEMA_REGISTRY_LISTENERS: "http://0.0.0.0:8081"
+      SCHEMA_REGISTRY_HOST_NAME: "schema-registry"
+    restart: always
+
+networks:
+  kafka-network:
+    driver: bridge
