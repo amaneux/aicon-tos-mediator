@@ -1,0 +1,728 @@
+{
+  "type" : "record",
+  "name" : "Envelope",
+  "namespace" : "hvr.inv_wi",
+  "fields" : [
+    {
+      "type": "record",
+      "name": "Key",
+      "fields": [
+        {
+          "name": "gkey",
+          "type": "long"
+        }
+      ]
+    },
+    {
+      "name" : "before",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "Value",
+      "fields" : [ {
+        "name" : "gkey",
+        "type" : "long"
+      }, {
+        "name" : "pkey",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "facility_gkey",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "uyv_gkey",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "tbdu_gkey",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "wq_pkey",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "work_queue_gkey",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "ar_pkey",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "ar_gkey",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "shift_target_pkey",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "shift_target_gkey",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "che_id",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "che_gkey",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "itv_id",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "itv_gkey",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "che_work_assignment_pkey",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "che_work_assignment_gkey",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "itv_work_assignment_pkey",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "itv_work_assignment_gkey",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "intended_che_id",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "intended_che_gkey",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "nominated_che_gkey",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "move_number",
+        "type" : [ "null", "double" ],
+        "default" : null
+      }, {
+        "name" : "sequence",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "crane_lane",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "set_aside",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "door_direction",
+        "type" : "string"
+      }, {
+        "name" : "decking_restriction",
+        "type" : "string"
+      }, {
+        "name" : "twin_with",
+        "type" : "string"
+      }, {
+        "name" : "twin_int_fetch",
+        "type" : "boolean"
+      }, {
+        "name" : "twin_int_carry",
+        "type" : "boolean"
+      }, {
+        "name" : "twin_int_put",
+        "type" : "boolean"
+      }, {
+        "name" : "ec_state_fetch",
+        "type" : "string"
+      }, {
+        "name" : "ec_state_dispatch_request",
+        "type" : [ "null", "boolean" ],
+        "default" : null
+      }, {
+        "name" : "ec_state_itv_dispatch_request",
+        "type" : [ "null", "boolean" ],
+        "default" : null
+      }, {
+        "name" : "ec_state_dispatch_b",
+        "type" : [ "null", "boolean" ],
+        "default" : null
+      }, {
+        "name" : "ec_state_itv_dispatch_b",
+        "type" : [ "null", "boolean" ],
+        "default" : null
+      }, {
+        "name" : "suspend_state",
+        "type" : "string"
+      }, {
+        "name" : "locked",
+        "type" : "boolean"
+      }, {
+        "name" : "confirmed",
+        "type" : "boolean"
+      }, {
+        "name" : "definite",
+        "type" : "boolean"
+      }, {
+        "name" : "executable",
+        "type" : "boolean"
+      }, {
+        "name" : "asc_aborted",
+        "type" : "boolean"
+      }, {
+        "name" : "increment_crane_lane",
+        "type" : "boolean"
+      }, {
+        "name" : "being_rehandled",
+        "type" : "boolean"
+      }, {
+        "name" : "being_deleted",
+        "type" : "boolean"
+      }, {
+        "name" : "should_be_sent",
+        "type" : "boolean"
+      }, {
+        "name" : "sequenced_pwp",
+        "type" : "boolean"
+      }, {
+        "name" : "host_request_priority",
+        "type" : "boolean"
+      }, {
+        "name" : "skip_host_update",
+        "type" : "boolean"
+      }, {
+        "name" : "move_stage",
+        "type" : "string"
+      }, {
+        "name" : "conf_move_stage",
+        "type" : "string"
+      }, {
+        "name" : "ec_hold",
+        "type" : "string"
+      }, {
+        "name" : "eq_moves_key",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "eq_uses_key",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "move_kind",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "carrier_loctype",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "carrier_locid",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "mvhs_fetch_che_id",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "mvhs_fetch_che_name",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "mvhs_carry_che_id",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "mvhs_carry_che_name",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "mvhs_put_che_id",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "mvhs_put_che_name",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "mvhs_dist_start",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "mvhs_dist_carry",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "mvhs_t_carry_complete",
+        "type" : [ "null", {
+          "type" : "long",
+          "connect.version" : 1,
+          "connect.name" : "io.debezium.time.MicroTimestamp"
+        } ],
+        "default" : null
+      }, {
+        "name" : "mvhs_t_dispatch",
+        "type" : [ "null", {
+          "type" : "long",
+          "connect.version" : 1,
+          "connect.name" : "io.debezium.time.MicroTimestamp"
+        } ],
+        "default" : null
+      }, {
+        "name" : "mvhs_t_fetch",
+        "type" : [ "null", {
+          "type" : "long",
+          "connect.version" : 1,
+          "connect.name" : "io.debezium.time.MicroTimestamp"
+        } ],
+        "default" : null
+      }, {
+        "name" : "mvhs_t_put",
+        "type" : [ "null", {
+          "type" : "long",
+          "connect.version" : 1,
+          "connect.name" : "io.debezium.time.MicroTimestamp"
+        } ],
+        "default" : null
+      }, {
+        "name" : "mvhs_t_carry_fetch_ready",
+        "type" : [ "null", {
+          "type" : "long",
+          "connect.version" : 1,
+          "connect.name" : "io.debezium.time.MicroTimestamp"
+        } ],
+        "default" : null
+      }, {
+        "name" : "mvhs_t_carry_put_ready",
+        "type" : [ "null", {
+          "type" : "long",
+          "connect.version" : 1,
+          "connect.name" : "io.debezium.time.MicroTimestamp"
+        } ],
+        "default" : null
+      }, {
+        "name" : "mvhs_t_carry_dispatch",
+        "type" : [ "null", {
+          "type" : "long",
+          "connect.version" : 1,
+          "connect.name" : "io.debezium.time.MicroTimestamp"
+        } ],
+        "default" : null
+      }, {
+        "name" : "mvhs_t_discharge",
+        "type" : [ "null", {
+          "type" : "long",
+          "connect.version" : 1,
+          "connect.name" : "io.debezium.time.MicroTimestamp"
+        } ],
+        "default" : null
+      }, {
+        "name" : "mvhs_rehandle_count",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "mvhs_pow_pkey",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "mvhs_pool_pkey",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "mvhs_twin_fetch",
+        "type" : [ "null", "boolean" ],
+        "default" : null
+      }, {
+        "name" : "mvhs_twin_carry",
+        "type" : [ "null", "boolean" ],
+        "default" : null
+      }, {
+        "name" : "mvhs_twin_put",
+        "type" : [ "null", "boolean" ],
+        "default" : null
+      }, {
+        "name" : "mvhs_tandem_fetch",
+        "type" : [ "null", "boolean" ],
+        "default" : null
+      }, {
+        "name" : "mvhs_tandem_put",
+        "type" : [ "null", "boolean" ],
+        "default" : null
+      }, {
+        "name" : "mvhs_tz_arrival_time",
+        "type" : [ "null", {
+          "type" : "long",
+          "connect.version" : 1,
+          "connect.name" : "io.debezium.time.MicroTimestamp"
+        } ],
+        "default" : null
+      }, {
+        "name" : "mvhs_fetch_che_distance",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "mvhs_carry_che_distance",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "mvhs_put_che_distance",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "mvhs_t_fetch_dispatch",
+        "type" : [ "null", {
+          "type" : "long",
+          "connect.version" : 1,
+          "connect.name" : "io.debezium.time.MicroTimestamp"
+        } ],
+        "default" : null
+      }, {
+        "name" : "mvhs_t_put_dispatch",
+        "type" : [ "null", {
+          "type" : "long",
+          "connect.version" : 1,
+          "connect.name" : "io.debezium.time.MicroTimestamp"
+        } ],
+        "default" : null
+      }, {
+        "name" : "est_move_time",
+        "type" : [ "null", {
+          "type" : "long",
+          "connect.version" : 1,
+          "connect.name" : "io.debezium.time.MicroTimestamp"
+        } ],
+        "default" : null
+      }, {
+        "name" : "t_orig_est_start",
+        "type" : [ "null", {
+          "type" : "long",
+          "connect.version" : 1,
+          "connect.name" : "io.debezium.time.MicroTimestamp"
+        } ],
+        "default" : null
+      }, {
+        "name" : "restow_account",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "service_order",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "restow_reason",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "road_truck",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "che_dispatch_order",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "itv_dispatch_order",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "pos_loctype",
+        "type" : "string"
+      }, {
+        "name" : "pos_locid",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "pos_loc_gkey",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "pos_slot",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "pos_orientation",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "pos_name",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "pos_bin",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "pos_tier",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "pos_orientation_degrees",
+        "type" : [ "null", "double" ],
+        "default" : null
+      }, {
+        "name" : "pos_slot_on_carriage",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "truck_visit_ref",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "pool_level",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "msg_ref",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "planner_create",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "planner_modify",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "t_create",
+        "type" : [ "null", {
+          "type" : "long",
+          "connect.version" : 1,
+          "connect.name" : "io.debezium.time.MicroTimestamp"
+        } ],
+        "default" : null
+      }, {
+        "name" : "t_modified",
+        "type" : [ "null", {
+          "type" : "long",
+          "connect.version" : 1,
+          "connect.name" : "io.debezium.time.MicroTimestamp"
+        } ],
+        "default" : null
+      }, {
+        "name" : "create_tool",
+        "type" : "string"
+      }, {
+        "name" : "imminent_move",
+        "type" : "boolean"
+      }, {
+        "name" : "almost_imminent",
+        "type" : "boolean"
+      }, {
+        "name" : "almost_current",
+        "type" : "boolean"
+      }, {
+        "name" : "being_carried",
+        "type" : "boolean"
+      }, {
+        "name" : "carry_by_straddle",
+        "type" : "boolean"
+      }, {
+        "name" : "dispatch_hung",
+        "type" : "boolean"
+      }, {
+        "name" : "ignore_gate_hold",
+        "type" : "boolean"
+      }, {
+        "name" : "tv_gkey",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "tran_gkey",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "origin_from_qual",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "assigned_chassid",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "swappable_delivery",
+        "type" : [ "null", "boolean" ],
+        "default" : null
+      }, {
+        "name" : "n4_specified_queue",
+        "type" : [ "null", "boolean" ],
+        "default" : null
+      }, {
+        "name" : "gate_transaction_sequence",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "crane_lane_tier",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "yard_move_filter",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "actual_sequence",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "actual_vessel_twin_pkey",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "actual_vessel_twin_gkey",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "strict_load",
+        "type" : [ "null", "boolean" ],
+        "default" : null
+      }, {
+        "name" : "preferred_transfer_location",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "is_tandem_with_next",
+        "type" : [ "null", "boolean" ],
+        "default" : null
+      }, {
+        "name" : "is_tandem_with_previous",
+        "type" : [ "null", "boolean" ],
+        "default" : null
+      }, {
+        "name" : "xps_object_version",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "emt_time_horizon_min",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "has_active_alarm",
+        "type" : [ "null", "boolean" ],
+        "default" : null
+      }, {
+        "name" : "pair_with",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "bim_swappable",
+        "type" : "boolean"
+      }, {
+        "name" : "n4_to_complete_move",
+        "type" : [ "null", "boolean" ],
+        "default" : null
+      }, {
+        "name" : "assigned_crane_gkey",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "yard_crane_sequence",
+        "type" : [ "null", "long" ],
+        "default" : null
+      }, {
+        "name" : "twist_lock_type",
+        "type" : [ "null", "string" ],
+        "default" : null
+      } ],
+      "connect.name" : "hvr.inv_wi.Value"
+    } ],
+    "default" : null
+  }, {
+    "name" : "after",
+    "type" : [ "null", "Value" ],
+    "default" : null
+  }, {
+    "name" : "source",
+    "type" : {
+      "type" : "record",
+      "name" : "Source",
+      "namespace" : "io.debezium.connector.oracle",
+      "fields" : [ {
+        "name" : "version",
+        "type" : "string"
+      }, {
+        "name" : "connector",
+        "type" : "string"
+      }, {
+        "name" : "name",
+        "type" : "string"
+      }, {
+        "name" : "ts_ms",
+        "type" : "long"
+      }, {
+        "name" : "snapshot",
+        "type" : [ {
+          "type" : "string",
+          "connect.version" : 1,
+          "connect.parameters" : {
+            "allowed" : "true,last,false"
+          },
+          "connect.default" : "false",
+          "connect.name" : "io.debezium.data.Enum"
+        }, "null" ],
+        "default" : "false"
+      }, {
+        "name" : "db",
+        "type" : "string"
+      }, {
+        "name" : "sequence",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "schema",
+        "type" : "string"
+      }, {
+        "name" : "table",
+        "type" : "string"
+      }, {
+        "name" : "txId",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "scn",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "commit_scn",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "lcr_position",
+        "type" : [ "null", "string" ],
+        "default" : null
+      } ],
+      "connect.name" : "io.debezium.connector.oracle.Source"
+    }
+  }, {
+    "name" : "op",
+    "type" : "string"
+  }, {
+    "name" : "ts_ms",
+    "type" : [ "null", "long" ],
+    "default" : null
+  }, {
+    "name" : "transaction",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "ConnectDefault",
+      "namespace" : "io.confluent.connect.avro",
+      "fields" : [ {
+        "name" : "id",
+        "type" : "string"
+      }, {
+        "name" : "total_order",
+        "type" : "long"
+      }, {
+        "name" : "data_collection_order",
+        "type" : "long"
+      } ]
+    } ],
+    "default" : null
+  } ],
+  "connect.name" : "hvr.inv_wi.Envelope"
+}

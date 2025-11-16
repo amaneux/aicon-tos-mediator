@@ -1,0 +1,25 @@
+<configuration>
+    <!-- Console Appender for debugging -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- InMemoryAppender for testing -->
+    <appender name="TEST" class="util.InMemoryAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+    </appender>
+
+    <!-- Test-specific logger configuration -->
+    <logger name="com.aicon.tos" level="DEBUG" additivity="false">
+        <appender-ref ref="TEST"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <root level="DEBUG">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>

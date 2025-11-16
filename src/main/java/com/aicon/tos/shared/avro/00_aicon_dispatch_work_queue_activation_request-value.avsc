@@ -1,0 +1,64 @@
+{
+  "type": "record",
+  "name": "dispatch_work_queue_activation_value",
+  "namespace": "com.avlino.aicon.WorkQueueActivationRequest",
+  "doc": "Future work queue activation request message",
+  "fields": [
+    {
+      "name": "APIIdentifier",
+      "type": "int",
+      "default": 0
+    },
+    {
+      "name": "requestIdx",
+      "type": "string",
+      "default": "UNKNOWN"
+    },
+    {
+      "name": "timestamp",
+      "type": {
+        "type": "long",
+        "connect.version": 1,
+        "connect.name": "org.apache.kafka.connect.data.Timestamp",
+        "logicalType": "timestamp-millis"
+      }
+    },
+    {
+      "name": "requests",
+      "type": {
+        "type": "array",
+        "items": {
+          "type": "record",
+          "name": "requests",
+          "fields": [
+            {
+              "name": "VesselVisitId",
+              "type": "string",
+              "default": "UNKNOWN"
+            },
+            {
+              "name": "QCId",
+              "type": "string",
+              "default": "UNKNOWN"
+            },
+            {
+              "name": "WorkQueueId",
+              "type": "string",
+              "default": "UNKNOWN"
+            },
+            {
+              "name": "uptUserId",
+              "type": "string",
+              "default": "UNKNOWN"
+            },
+            {
+              "name": "programId",
+              "type": "string",
+              "default": "UNKNOWN"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

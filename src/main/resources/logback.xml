@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="VAADIN" class="com.aicon.tos.connect.web.pages.logview.VaadinLogAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+    </appender>
+
+    <logger name="com.aicon" level="DEBUG" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="VAADIN"/>
+    </logger>
+
+    <logger name="org.apache.kafka" level="OFF" />
+    <logger name="io.confluent.kafka" level="OFF" />
+<!--    <logger name="org.apache.kafka.common" level="WARNING" />-->
+<!--    <logger name="org.apache.kafka.clients" level="WARNING" />-->
+<!--    <logger name="org.apache.kafka.clients.consumer" level="WARNING" />-->
+<!--    <logger name="org.apache.kafka.common.metrics" level="WARNING" />-->
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>

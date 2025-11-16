@@ -1,0 +1,32 @@
+{
+  "type": "record",
+  "name": "dispatch_work_queue_activation_response_value",
+  "namespace": "com.avlino.aicon.WorkQueueActivationResponse",
+  "fields": [
+    {
+      "name": "APIIdentifier",
+      "type": "int"
+    },
+    {
+      "name": "requestIdx",
+      "type": "string"
+    },
+    {
+      "name": "timestamp",
+      "type": {
+        "type": "long",
+        "connect.version": 1,
+        "connect.name": "org.apache.kafka.connect.data.Timestamp",
+        "logicalType": "timestamp-millis"
+      }
+    },
+    {
+      "name": "errCode",
+      "type": "int"
+    },
+    {
+      "name": "errMsg",
+      "type": "string"
+    }
+  ]
+}

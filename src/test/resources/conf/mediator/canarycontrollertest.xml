@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="schema/connect-configuration.xsd">
+  <General>
+    <GeneralItems>
+      <ConfigItem key="terminal.name" value="HVR" comment="Name of port"/>
+      <ConfigItem key="environment.name" value="TST" comment="N4 installation"/>
+      <ConfigItem key="yard.scope" value="YYY/XXX/ZZZ/WWW" comment=""/>
+      <ConfigItem key="email.hostname" value="smtp.gmail.com" comment=""/>
+      <ConfigItem key="email.smtpport" value="587" comment=""/>
+      <ConfigItem key="email.username" value="harrievanrijn@gmail.com" comment=""/>
+      <ConfigItem key="email.password" value="aueq vucf nptt tihl" comment=""/>
+      <ConfigItem key="email.sender" value="harrievanrijn@gmail.com" comment=""/>
+
+    </GeneralItems>
+  </General>
+  <Connections>
+    <Kafka name="KAFKA-DEV">
+      <ConfigItem key="hostname" value="vit-dev-kafka.avlino.az" comment="Hostname/IP-address of the kafka broker" />
+      <ConfigItem key="hostport" value="9094" comment="" />
+      <ConfigItem key="schema.registry.port" value="8081" comment="The port number of the schema registry" />
+      <ConfigItem key="connection.timeout.ms" value="10000" comment="Max time it may to take to connect" />
+      <ConfigItem key="group.id" value="aicon-tos-mediator" comment="Group id allows multiple consumers to read in parallel" />
+      <ConfigItem key="poll.timeout.ms" value="1000" comment="Time for every poll session of the kafka stream" />
+      <ConfigItem key="cdc.topic.prefix" value="tos.test2" comment="The prefix to every tos-table given by the cdc connector." />
+    </Kafka>
+    <Http name="DEV">
+      <ConfigItem key="http.url" value="http://localhost:8080/aicon-tos-mediator" comment="The URL of the HTTP receiver." />
+      <ConfigItem key="http.method" value="POST" comment="The method to use for sending." />
+      <ConfigItem key="http.content.type" value="xml" comment="The content type used for sending." />
+      <ConfigItem key="http.connect.timeout.ms" value="5000" comment="The time it may take for connecting." />
+      <ConfigItem key="http.read.timeout.ms" value="10000" comment="The time it may take for reading (incl.connection time)." />
+    </Http>
+    <Http name="TEST">
+      <ConfigItem key="http.url" value="http://10.2.2.92:7110/RPC/api" comment="The URL of the HTTP receiver." />
+      <ConfigItem key="http.method" value="POST" comment="The method to use for sending." />
+      <ConfigItem key="http.content.type" value="xml" comment="The content type used for sending." />
+      <ConfigItem key="http.connect.timeout.ms" value="5000" comment="The time it may take for connecting." />
+      <ConfigItem key="http.read.timeout.ms" value="10000" comment="The time it may take for reading (incl.connection time)." />
+    </Http>
+    <Http name="TOS-CANARY">
+      <ConfigItem key="http.url" value="http://10.111.212.43:9081/apex/services/argobasicservice" comment="The URL of the HTTP receiver." />
+      <ConfigItem key="http.username" value="admin" comment="The method to use for sending." />
+      <ConfigItem key="http.password" value="admin" comment="The method to use for sending." />
+      <ConfigItem key="http.method" value="POST" comment="The method to use for sending." />
+      <ConfigItem key="http.content.type" value="xml" comment="The content type used for sending." />
+      <ConfigItem key="http.connect.timeout.ms" value="5000" comment="The time it may take for connecting." />
+      <ConfigItem key="http.read.timeout.ms" value="10000" comment="The time it may take for reading (incl.connection time)." />
+      <ConfigItem key="transformer.class" value="com.aicon.tos.connect.http.transformers.SoapTransformer" comment="Transformer class to wrap the request and strip the response." />
+    </Http>
+    <Http name="TOS-CONTROL-MOCKUP">
+      <ConfigItem key="http.url" value="http://localhost:8282/aicon-tos-mediator/ControlMockWebService" comment="The URL of the HTTP receiver." />
+      <ConfigItem key="http.method" value="POST" comment="The method to use for sending." />
+      <ConfigItem key="http.content.type" value="xml" comment="The content type used for sending." />
+      <ConfigItem key="http.connect.timeout.ms" value="5000" comment="The time it may take for connecting." />
+      <ConfigItem key="http.read.timeout.ms" value="10000" comment="The time it may take for reading (incl.connection time)." />
+      <ConfigItem key="transformer.class" value="com.avlino.aicon.transformers.N4WebServiceWrapper" comment="Transformer class to wrap the request and strip the response." />
+    </Http>
+    <Http name="TOS-CONTROL">
+      <ConfigItem key="http.url" value="http://localhost:8282/aicon-tos-mediator/basicXMLWebService" comment="The URL of the HTTP receiver." />
+      <ConfigItem key="http.method" value="POST" comment="The method to use for sending." />
+      <ConfigItem key="http.content.type" value="xml" comment="The content type used for sending." />
+      <ConfigItem key="http.connect.timeout.ms" value="5000" comment="The time it may take for connecting." />
+      <ConfigItem key="http.read.timeout.ms" value="10000" comment="The time it may take for reading (incl.connection time)." />
+      <ConfigItem key="transformer.class" value="com.avlino.aicon.transformers.N4WebServiceWrapper" comment="Transformer class to wrap the request and strip the response." />
+    </Http>
+    <Http name="PNC-TEST">
+      <ConfigItem key="http.url" value="http://localhost:8282/aicon-tos-mediator/basicJSONWebService" comment="The URL of the HTTP receiver." />
+      <ConfigItem key="http.method" value="POST" comment="The method to use for sending." />
+      <ConfigItem key="http.content.type" value="xml" comment="The content type used for sending." />
+      <ConfigItem key="http.connect.timeout.ms" value="5000" comment="The time it may take for connecting." />
+      <ConfigItem key="http.read.timeout.ms" value="10000" comment="The time it may take for reading (incl.connection time)." />
+      <ConfigItem key="transformer.class" value="com.avlino.aicon.transformers.N4WebServiceWrapper" comment="Transformer class to wrap the request and strip the response." />
+    </Http>
+    <Http name="NEW-REF">
+      <ConfigItem key="hostport" value="9092" />
+    </Http>
+    <Kafka name="NewKafkaConfig">
+      <ConfigItem key="hostname" value="kafka.example.com" />
+    </Kafka>
+  </Connections>
+  <Flows>
+    <Flow name="swapOnLoad">
+      <ConfigItem key="url.path" value="/swapOnLoad" comment="Extends the path of the connection URL" />
+      <ConfigItem key="topic.source" value="aicon_dispatch_itv_job_resequence_request" comment="The source topic to subscribe to" />
+      <ConfigItem key="topic.response.ok" value="aicon_dispatch_itv_job_resequence_response" comment="The response topic to send to when a response has been received" />
+      <ConfigItem key="topic.response.fail" value="" comment="The response topic to send to when connection failed (when empty, the ok response topic will be used." />
+      <ConfigItem key="transformer.request" value="" comment="The transformer full classname (available on the classpath) to transform the request into a message the TOS accepts." />
+      <ConfigItem key="transformer.response" value="" comment="The transformer full classname (available on the classpath) to transform the response into a message Avlino accepts." />
+      <HttpRef ref="PNC-TEST" />
+      <KafkaRef ref="KAFKA-DEV" />
+    </Flow>
+    <Flow name="activateWorkQueue">
+      <ConfigItem key="url.path" value="/activateWorkQueue" comment="Extends the path of the connection URL" />
+      <ConfigItem key="topic.source" value="aicon_dispatch_work_queue_activation_request" comment="The source topic to subscribe to" />
+      <ConfigItem key="topic.response.ok" value="aicon_dispatch_work_queue_activation_response" comment="The response topic to send to when a response has been received" />
+      <ConfigItem key="topic.response.fail" value="" comment="The response topic to send to when connection failed (when empty, the ok response topic will be used." />
+      <ConfigItem key="transformer.request" value="" comment="The transformer full classname (available on the classpath) to transform the request into a message the TOS accepts." />
+      <ConfigItem key="transformer.response" value="" comment="The transformer full classname (available on the classpath) to transform the response into a message Avlino accepts." />
+      <HttpRef ref="PNC-TEST" />
+      <KafkaRef ref="KAFKA-DEV" />
+    </Flow>
+    <Flow name="ControlFlow">
+      <ConfigItem key="topic.source" value="AICON_TOS_CONTROL" comment="The source topic to subscribe to" />
+      <ConfigItem key="topic.response.ok" value="" comment="The response topic to send to when a response has been received" />
+      <ConfigItem key="topic.response.fail" value="" comment="The response topic to send to when connection failed (when empty, the ok response topic will be used." />
+      <ConfigItem key="transformer.request" value="" comment="The transformer full classname (available on the classpath) to transform the request into a message the TOS accepts." />
+      <ConfigItem key="transformer.response" value="" comment="The transformer full classname (available on the classpath) to transform the response into a message Avlino accepts." />
+      <HttpRef ref="TOS-CONTROL-MOCKUP" />
+      <KafkaRef ref="KAFKA-DEV" />
+    </Flow>
+  </Flows>
+  <TosControl>
+    <CanaryCheck name="Canary Check">
+      <ConfigItem key="canary.interval.ms" value="12000"/>
+      <ConfigItem key="canary.cdc.frequency" value="6"/>
+      <CDCTable name="inv_move_event">
+        <ConfigItem key="topic.name" value="INV_MOVE_EVENT_MV" />
+        <ConfigItem key="cdc.threshold" value="40000" />
+      </CDCTable>
+      <CDCTable name="inv_unit_fcy_visit">
+        <ConfigItem key="topic.name" value="INV_UNIT_FCY_VISIT_MV" />
+        <ConfigItem key="cdc.threshold" value="15000" />
+      </CDCTable>
+      <CDCTable name="inv_wi">
+        <ConfigItem key="topic.name" value="INV_WI_MV" />
+        <ConfigItem key="cdc.threshold" value="5000" />
+      </CDCTable>
+      <HttpRef ref="TOS-CANARY" />
+      <KafkaRef ref="KAFKA-DEV" />
+    </CanaryCheck>
+    <ControlRequest name="Control Request">
+      <ConfigItem key="topic.source" value="aicon_tos_control" comment="tobefilled" />
+      <HttpRef ref="TOS-CONTROL-MOCKUP" />
+      <KafkaRef ref="KAFKA-DEV" />
+    </ControlRequest>
+  </TosControl>
+</Config>

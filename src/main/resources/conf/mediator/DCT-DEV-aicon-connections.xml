@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- =========================================== -->
+<!-- Configuration file for Dakar Development -->
+<!-- =========================================== -->
+<Config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="schema/connect-configuration.xsd">
+    <General>
+        <GeneralItems>
+            <ConfigItem key="terminal.name" value="DCT" comment="Name of port"/>
+            <ConfigItem key="environment.name" value="DEV"
+                        comment="Environment should match env within the mediator hostname"/>
+            <ConfigItem key="yard.scope" value="DPW/DAKAR/DKR/TCPD" comment="N4-scope: operator/complex/facility/yard"/>
+            <ConfigItem key="tos.position.schema" value="B3R2C1.T1"
+                        comment="Label schema, using: B=Block, R=Row, C=Column, T=Tier"/>
+            <ConfigItem key="email.hostname" value="smtp.gmail.com" comment=""/>
+            <ConfigItem key="email.smtpport" value="587" comment=""/>
+            <ConfigItem key="email.username" value="harrievanrijn@gmail.com" comment=""/>
+            <ConfigItem key="email.password" value="aueq vucf nptt tihl" comment=""/>
+            <ConfigItem key="email.sender" value="harrievanrijn@gmail.com" comment=""/>
+            <ConfigItem key="decking.engine.request.topic" value="aicon_decking_request_v2"/>
+            <ConfigItem key="decking.engine.response.topic" value="aicon_decking_response_v2"/>
+        </GeneralItems>
+    </General>
+    <Datasources>
+        <Mongo name="MONGO">
+            <ConfigItem key="hostname" value="dct-dev-mongo.avlino.az" comment="Hostname of the mongo db"/>
+            <ConfigItem key="hostport" value="27018" comment="port of mongo db host"/>
+            <ConfigItem key="username" value="alenza"/>
+            <ConfigItem key="password" value="Thisis4devops"/>
+            <ConfigItem key="connection.timeout.ms" value="10000" comment="Max time it may to take to connect"/>
+            <ConfigGroup name="Collections">
+                <ConfigItem key="collection.move_info" value="current_state_v2/vw_RTE_Move_Info"
+                            comment="Read ctr-info based on wi-gkey"/>
+            </ConfigGroup>
+        </Mongo>
+        <SqlDb name="AiconSettings">
+            <ConfigItem key="hostname" value="dct-dev-mysql.avlino.az" comment="Hostname of the mongo db"/>
+            <ConfigItem key="hostport" value="3306" comment="port of mongo db host"/>
+            <ConfigItem key="username" value="alenza"/>
+            <ConfigItem key="password" value="Thisis4devops"/>
+            <ConfigItem key="connection.timeout.ms" value="10000" comment="Max time it may to take to connect"/>
+            <ConfigGroup name="conversions">
+                <ConfigItem key="key.conversion.prefix" value="RestServices.DeckingRequestGateway.Config.%s"/>
+                <ConfigItem key="block.conversion"
+                            value="01A -> 1101, 01B -> 1102, 01C -> 1103, 01D -> 1104, 01E -> 1105, 01M -> 1113, 01N -> 1114, 02A -> 1201, 02B -> 1202, 02C -> 1203, 02D -> 1204, 02E -> 1205, 02F -> 1206, 03A -> 1301, 03B -> 1302, 03C -> 1303, 03D -> 1304, 03E -> 1305, 03F -> 1306, 03G -> 1307, 03H -> 1308, 03N -> 1314, 04A -> 1401, 04B -> 1402, 04C -> 1403, 04D -> 1404, 04E -> 1405, 04F -> 1406, 04G -> 1407, 04H -> 1408, 04I -> 1409, 04J -> 1410, 04K -> 1411, 04L -> 1412, 04M -> 1413, 04N -> 1414"/>
+                <ConfigItem key="row.conversion" value="-1/2"/>
+                <ConfigItem key="bay.conversion" value="A->0,B->1,C->2,D->3,E->4,F->5,G->6,H->7,J->8,K->9,L->10,M->11"/>
+                <ConfigItem key="tier.conversion" value="-1"/>
+            </ConfigGroup>
+        </SqlDb>
+    </Datasources>
+    <Connections>
+        <Kafka name="TOS-KAFKA">
+            <ConfigItem key="hostname" value="dct-dev-kafka.avlino.az"
+                        comment="Hostname/IP-address of the kafka broker"/> <!-- ipc localhost -->
+            <ConfigItem key="hostport" value="9094" comment=""/>
+            <ConfigItem key="schema.registry.port" value="8081" comment="The port number of the schema registry"/>
+            <ConfigItem key="connection.timeout.ms" value="10000" comment="Max time it may to take to connect"/>
+            <ConfigItem key="group.id" value="aicon-tos-mediator"
+                        comment="Group id allows multiple consumers to read in parallel"/>
+            <ConfigItem key="poll.timeout.ms" value="1000" comment="Time for every poll session of the kafka stream"/>
+            <ConfigItem key="cdc.topic.prefix" value="tos.apex.dbo."
+                        comment="The prefix to every tos-table given by the cdc connector."/>
+        </Kafka>
+        <Http name="TOS-N4">
+            <ConfigItem key="http.url" value="http://10.52.80.2:9081/apex/services/argobasicservice"
+                        comment="The URL of the HTTP receiver."/>
+            <ConfigItem key="http.username" value="admin" comment="The method to use for sending."/>
+            <ConfigItem key="http.password" value="P@SSword12359!7" comment="The method to use for sending."/>
+            <ConfigItem key="http.method" value="POST" comment="The method to use for sending."/>
+            <ConfigItem key="http.content.type" value="xml" comment="The content type used for sending."/>
+            <ConfigItem key="http.connect.timeout.ms" value="5000" comment="The time it may take for connecting."/>
+            <ConfigItem key="http.read.timeout.ms" value="10000"
+                        comment="The time it may take for reading (incl.connection time)."/>
+            <ConfigItem key="transformer.class" value="com.aicon.tos.connect.http.transformers.SoapTransformer"
+                        comment="Transformer class to wrap the request and strip the response."/>
+        </Http>
+    </Connections>
+    <Flows>
+        <Flow name="ControlFlow">
+            <ConfigItem key="topic.source" value="AICON_TOS_CONTROL" comment="The source topic to subscribe to"/>
+            <ConfigItem key="topic.allow.create" value="true"/>
+            <ConfigItem key="topic.response.ok" value="aicon_tos_control_response"
+                        comment="The response topic to send to when a response has been received"/>
+            <ConfigItem key="topic.response.fail" value=""
+                        comment="The response topic to send to when connection failed (when empty, the ok response topic will be used."/>
+            <ConfigItem key="transformer.request" value=""
+                        comment="The transformer full classname (available on the classpath) to transform the request into a message the TOS accepts."/>
+            <ConfigItem key="transformer.response" value=""
+                        comment="The transformer full classname (available on the classpath) to transform the response into a message Avlino accepts."/>
+            <HttpRef ref="TOS-N4"/>
+            <KafkaRef ref="TOS-KAFKA"/>
+        </Flow>
+        <Flow name="DeckingUpdateFlow">
+            <ConfigItem key="topic.source" value="TOS_DECKING_UPDATE_REQUEST"
+                        comment="The source topic to subscribe to"/>
+            <ConfigItem key="topic.allow.create" value="true"/>
+            <ConfigItem key="topic.response.ok" value="TOS_DECKING_UPDATE_RESPONSE"
+                        comment="The response topic to send to when a response has been received"/>
+            <ConfigItem key="topic.response.fail" value=""
+                        comment="The response topic to send to when connection failed (when empty, the ok response topic will be used."/>
+            <ConfigItem key="transformer.request" value=""
+                        comment="The transformer full classname (available on the classpath) to transform the request into a message the TOS accepts."/>
+            <ConfigItem key="transformer.response" value=""
+                        comment="The transformer full classname (available on the classpath) to transform the response into a message Avlino accepts."/>
+            <HttpRef ref="TOS-N4"/>
+            <KafkaRef ref="TOS-KAFKA"/>
+        </Flow>
+    </Flows>
+    <TosControl>
+        <CanaryCheck name="Canary Check">
+            <ConfigItem key="canary.on.off" value="off"/>
+            <ConfigItem key="canary.interval.ms" value="12000"/>
+            <ConfigItem key="canary.cdc.frequency" value="6"/>
+<!--
+            <CDCTable name="inv_move_event">
+                <ConfigItem key="topic.name" value="inv_move_event"/>
+                <ConfigItem key="group.id" value="aicon-tos-mediator-canary"/>
+                <ConfigItem key="cdc.threshold" value="400000"/>
+            </CDCTable>
+            <CDCTable name="inv_wi">
+                <ConfigItem key="topic.name" value="inv_wi"/>
+                <ConfigItem key="group.id" value="aicon-tos-mediator-canary"/>
+                <ConfigItem key="cdc.threshold" value="400000"/>
+            </CDCTable>
+-->
+            <HttpRef ref="TOS-N4"/>
+            <KafkaRef ref="TOS-KAFKA"/>
+        </CanaryCheck>
+        <ControlRequest name="Control Request">
+            <ConfigItem key="topic.source" value="aicon_tos_control" comment="tobefilled"/>
+            <ConfigItem key="topic.allow.create" value="true"/>
+            <ConfigItem key="group.id" value="aicon-tos-mediator-controlflow"/>
+            <HttpRef ref="TOS-N4"/>
+            <KafkaRef ref="TOS-KAFKA"/>
+        </ControlRequest>
+    </TosControl>
+    <Interceptors>
+        <InterceptorEntity name="inv_wi">
+            <ConfigItem key="topic.name" value="inv_wi" comment=""/>
+            <ConfigItem key="group.id" value="aicon-tos-mediator-interceptor"/>
+            <ConfigItem key="max.messages.in.storage" value="10000" comment=""/>
+            <ConfigItem key="max.time.in.storage" value="30" comment=""/>
+            <ConfigItem key="processing.delay" value="2000" comment=""/>
+            <Scenarios>
+                <Scenario name="VesselDischarge">
+                    <ConfigItem key="class.name"
+                                value="com.aicon.tos.interceptor.decide.scenarios.n4.VesselDischargeRTG"/>
+                </Scenario>
+                <!--
+                    <Scenario name="GateReceive">
+                        <ConfigItem key="class.name" value="com.aicon.tos.interceptor.decide.scenarios.n4.GateReceiveWI"/>
+                    </Scenario>
+                <Scenario name="Logger">
+                    <ConfigItem key="class.name" value="com.aicon.tos.interceptor.decide.scenarios.LoggerScenario"/>
+                </Scenario>
+                -->
+            </Scenarios>
+        </InterceptorEntity>
+        <!--
+        <InterceptorEntity name="road_truck_transactions">
+            <ConfigItem key="topic.name" value="road_truck_transactions" comment=""/>
+            <ConfigItem key="group.id" value="aicon-tos-mediator-interceptor"/>
+            <ConfigItem key="max.messages.in.storage" value="5000" comment=""/>
+            <ConfigItem key="max.time.in.storage" value="30" comment=""/>
+            <ConfigItem key="processing.delay" value="1500" comment=""/>
+            <Scenarios>
+                <Scenario name="GateReceive">
+                    <ConfigItem key="class.name" value="com.aicon.tos.interceptor.decide.scenarios.n4.GateReceiveRTT"/>
+                </Scenario>
+            </Scenarios>
+        </InterceptorEntity>
+        -->
+    </Interceptors>
+</Config>

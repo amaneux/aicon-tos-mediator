@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2023 sp1 (x64) (http://www.altova.com) by Ron de Waard (Twinspot BV) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<!-- Define the root element Config -->
+	<xs:element name="Config">
+		<xs:annotation>
+			<xs:documentation>Root element</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="General"/>
+				<xs:element name="Datasources" minOccurs="0">
+					<xs:complexType>
+						<xs:choice maxOccurs="unbounded">
+							<xs:element name="Mongo" type="ConfigGroupType"/>
+						</xs:choice>
+					</xs:complexType>
+				</xs:element>
+				<xs:element ref="Connections" minOccurs="0"/>
+				<xs:element ref="Flows" minOccurs="0"/>
+				<xs:element ref="TosControl" minOccurs="0"/>
+				<xs:element ref="Interceptors" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+		<!-- Define keys for Http and Kafka "name" attributes -->
+		<xs:key name="HttpKey">
+			<xs:selector xpath=".//Http"/>
+			<xs:field xpath="@name"/>
+		</xs:key>
+		<xs:key name="KafkaKey">
+			<xs:selector xpath=".//Kafka"/>
+			<xs:field xpath="@name"/>
+		</xs:key>
+		<!-- Key references for Http and Kafka elements with "ref" -->
+		<xs:keyref name="HttpRef" refer="HttpKey">
+			<xs:selector xpath=".//HttpRef"/>
+			<xs:field xpath="@ref"/>
+		</xs:keyref>
+		<xs:keyref name="KafkaRef" refer="KafkaKey">
+			<xs:selector xpath=".//KafkaRef"/>
+			<xs:field xpath="@ref"/>
+		</xs:keyref>
+	</xs:element>
+	<xs:complexType name="ConfigGroupType">
+		<xs:annotation>
+			<xs:documentation>Type to define ConfigGroup element tree</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ConfigItem" type="ConfigItemType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="ConfigGroup" type="ConfigGroupType" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="name" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="ConfigItemType">
+		<xs:annotation>
+			<xs:documentation>Type defining a single ConfigItem</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="key" type="ConfigItemKeyEnum" use="required"/>
+		<xs:attribute name="value" type="xs:string" use="required"/>
+		<xs:attribute name="comment" type="xs:string"/>
+	</xs:complexType>
+	<xs:simpleType name="ConfigItemKeyEnum">
+		<xs:annotation>
+			<xs:documentation> Enumeration for ConfigItem key attribute </xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="bootstrap.servers"/>
+			<xs:enumeration value="canary.cdc.frequency"/>
+			<xs:enumeration value="canary.interval.ms"/>
+			<xs:enumeration value="canary.on.off"/>
+			<xs:enumeration value="cdc.threshold"/>
+			<xs:enumeration value="cdc.topic.prefix"/>
+			<xs:enumeration value="collection.move_info"/>
+			<xs:enumeration value="connection.timeout.ms"/>
+			<xs:enumeration value="decking.engine.request.topic"/>
+			<xs:enumeration value="decking.engine.response.topic"/>
+			<xs:enumeration value="email.hostname"/>
+			<xs:enumeration value="email.password"/>
+			<xs:enumeration value="email.sender"/>
+			<xs:enumeration value="email.smtpport"/>
+			<xs:enumeration value="email.username"/>
+			<xs:enumeration value="environment.name"/>
+			<xs:enumeration value="field.id"/>
+			<xs:enumeration value="field.type"/>
+			<xs:enumeration value="group.id"/>
+			<xs:enumeration value="hostport"/>
+			<xs:enumeration value="hostname"/>
+			<xs:enumeration value="http.connect.timeout.ms"/>
+			<xs:enumeration value="http.content.type"/>
+			<xs:enumeration value="http.method"/>
+			<xs:enumeration value="http.password"/>
+			<xs:enumeration value="http.read.timeout.ms"/>
+			<xs:enumeration value="http.url"/>
+			<xs:enumeration value="http.username"/>
+			<xs:enumeration value="max.messages.in.storage"/>
+			<xs:enumeration value="max.time.in.storage"/>
+			<xs:enumeration value="password"/>
+			<xs:enumeration value="poll.timeout.ms"/>
+			<xs:enumeration value="processing.delay"/>
+			<xs:enumeration value="schema.registry.port"/>
+			<xs:enumeration value="terminal.name"/>
+			<xs:enumeration value="test.changes"/>
+			<xs:enumeration value="test.creations"/>
+			<xs:enumeration value="test.deletions"/>
+			<xs:enumeration value="topic.name"/>
+			<xs:enumeration value="topic.response.fail"/>
+			<xs:enumeration value="topic.response.ok"/>
+			<xs:enumeration value="topic.source"/>
+			<xs:enumeration value="transformer.class"/>
+			<xs:enumeration value="transformer.request"/>
+			<xs:enumeration value="transformer.response"/>
+			<xs:enumeration value="url.path"/>
+			<xs:enumeration value="username"/>
+			<xs:enumeration value="yard.scope"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="ConfigItem">
+		<xs:annotation>
+			<xs:documentation> ConfigItem element with enumeration </xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="key" type="ConfigItemKeyEnum" use="required"/>
+			<xs:attribute name="value" type="xs:string" use="required"/>
+			<xs:attribute name="comment" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="TosControl">
+		<xs:annotation>
+			<xs:documentation> TosControl element definition</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="CanaryCheck"/>
+				<xs:element ref="ControlRequest"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="General">
+		<xs:annotation>
+			<xs:documentation>General definition</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="GeneralItems" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="GeneralItems">
+		<xs:annotation>
+			<xs:documentation>General items</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ConfigItem" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Connections">
+		<xs:annotation>
+			<xs:documentation> Connections element definition </xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:choice maxOccurs="unbounded">
+				<xs:element ref="Kafka"/>
+				<xs:element ref="Http"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Kafka">
+		<xs:annotation>
+			<xs:documentation> Kafka element definition </xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ConfigItem" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Http">
+		<xs:annotation>
+			<xs:documentation> Http element definition with ref attribute </xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ConfigItem" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Flows">
+		<xs:annotation>
+			<xs:documentation> Flows element definition </xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Flow" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Flow">
+		<xs:annotation>
+			<xs:documentation> Flow element definition </xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:choice maxOccurs="unbounded">
+					<xs:element ref="ConfigItem"/>
+					<xs:element ref="HttpRef"/>
+					<xs:element ref="KafkaRef"/>
+				</xs:choice>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="HttpRef">
+		<xs:annotation>
+			<xs:documentation> HttpRef element definition to reference Http by "ref" attribute only </xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="ref" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="KafkaRef">
+		<xs:annotation>
+			<xs:documentation> KafkaRef element definition to reference Kafka by "ref" attribute only </xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="ref" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="CanaryCheck">
+		<xs:annotation>
+			<xs:documentation> CanaryCheck with Http reference </xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ConfigItem" maxOccurs="unbounded"/>
+				<xs:element ref="CDCTable" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="HttpRef"/>
+				<xs:element ref="KafkaRef"/>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ControlRequest">
+		<xs:annotation>
+			<xs:documentation> ControlRequest element with an HttpRef reference </xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ConfigItem" maxOccurs="unbounded"/>
+				<xs:element ref="HttpRef"/>
+				<xs:element ref="KafkaRef"/>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="CDCTable">
+		<xs:annotation>
+			<xs:documentation> CDCTableTopic element </xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ConfigItem" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Interceptors">
+		<xs:annotation>
+			<xs:documentation> Topics element </xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="InterceptorEntity" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="InterceptorEntity">
+		<xs:annotation>
+			<xs:documentation> Topic element </xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ConfigItem" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

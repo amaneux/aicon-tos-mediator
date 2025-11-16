@@ -1,0 +1,5 @@
+Code use the aicon-connections.xml found in:
+
+CATALINA_HOME + "conf/aicon-tos-mediator/aicon-connections.xml"
+
+This location is outside the tomcat application to preserve changes over new installations.

@@ -1,0 +1,23 @@
+{
+  "namespace": "com.aicon.tos.shared.schema",
+  "type": "record",
+  "name": "AiconTosConnectionStatusMessage",
+  "fields": [
+    {
+      "name": "request_id",
+      "type": "string"
+    },
+    {
+      "name": "connection_status",
+      "type": "com.aicon.tos.shared.schema.ConnectionStatus"
+    },
+    {
+      "name": "cdc_Ok",
+      "type": [
+        "null",
+        "boolean"
+      ],
+      "default": null
+    }
+  ]
+}

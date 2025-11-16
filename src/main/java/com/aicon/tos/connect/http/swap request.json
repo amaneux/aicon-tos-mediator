@@ -1,0 +1,32 @@
+{
+  "APIIdentifier": 12,
+  "requestIdx": "REQ_INDEX_444444",
+  "timestamp": "2024-10-25T20:25:40.449Z",
+  "requests": [
+    {
+      "QCId": "QC53",
+      "SeqCount": 2,
+      "swaps": [
+        {
+          "ITVId": "ITV-12345",
+          "SequenceNo1": 1,
+          "cntrNo1": "CNR-0001",
+          "cntrVisitId1": "VISIT-001",
+          "bayIdxNo1": "BAY-001",
+          "StackIdxNo1": "STACK-001",
+          "tierIdxNo1": "TIER-001",
+          "SequenceNo2": 2,
+          "cntrNo2": "CNR-0002",
+          "cntrVisitId2": "VISIT-002",
+          "bayIdxNo2": "BAY-002",
+          "StackIdxNo2": "STACK-002",
+          "tierIdxNo2": "TIER-002"
+        }
+      ],
+      "uptUserId": "DGL",
+      "programId": "interface",
+      "internalIdx1": "12345678",
+      "internalIdx2": "12345678"
+    }
+  ]
+}

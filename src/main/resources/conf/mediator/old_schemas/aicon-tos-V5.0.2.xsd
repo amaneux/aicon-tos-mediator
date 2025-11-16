@@ -1,0 +1,889 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2023 sp1 (x64) (http://www.altova.com) by Ron de Waard (Twinspot BV) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<!--Schema for requests/responses between Alenza Yardsight and TOS -->
+	<!--=================================-->
+	<!--Author: Ron de Waard-->
+	<!--Date: October 6, 2020-->
+	<!--Version: 5.0-->
+	<!--2021-jan-18 Added alenza-yardsight-error-response-->
+	<!--2022-jan-06 Updates to control-request/response and move-request (+wiGkey)-->
+	<!--2022-jan-27 Updates to the move-request and move-response messages V2.1-->
+	<!--2022-feb-01 Added moveSequence and WiSequence to move-request and move-response-->
+	<!--2022-jun-24 Reversed canary-request and response (by Aicon initative)-->
+	<!--2022-nov-30 Changes due to implemententation of delete/updateMove (wqName made optional, added moveStage) -->
+	<!--2022-dec-01 Added positionFrom attribute in addMove-->
+	<!--2023-feb-23 Added moveType attribute in addMove-->
+	<!--2024-may-29 Change in control request and renaming alenza to aicon-->
+	<!--2024-aug-21 Update and redesign of all messages-->
+	<!--2024-oct-15 Fieldnames changed -->
+	<!--2025-feb-18 Added priority to updateMove-->
+	<!--2025-mar-27 Added aicon-decking-request and -response message-->
+	<!--2025-apr-14 Changed the postionTo attribute to required in tos-decking-update-request-->
+	<!--2025-apr-18 Renamed tos-decking-update-request to aicon-yard-decking-update-request-->
+	<!--2025-may-01	Moves and Deckmove structure adapted to match TOS wsdl-->
+	<!--2025-may-06 Added ignore attribute to control request-->
+	<!--2025-may-15 Ramki, Added attribute 'cheId' to alenza-yardsight-move-request -->
+	<!--2025-may-28 RdW, extracted aicon-dispatch-move-update-request/response from aicon-yard-move-request/response & added aicon-gate-block-quota-update-request/response-->
+	<!--2025-may-29 RdW, added result to appt-ruleset and appt-rule-->
+	<!--2025-jun-13 RdW, added cheId to updateMove in aicon-dispatch-move-update-request-->
+	<!-- ================================= -->
+	<xs:element name="aicon-tos-canary-request">
+		<xs:annotation>
+			<xs:documentation>Watchdog request send every n seconds from Aicon to TOS</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="requestId" type="xs:string" use="required">
+				<xs:annotation>
+					<xs:documentation>Unique id</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="sequence" type="xs:long" use="required">
+				<xs:annotation>
+					<xs:documentation>sequential number starting at 1 for the 1st canary message sent.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="requestSendTs" type="xs:dateTime" use="required">
+				<xs:annotation>
+					<xs:documentation>UTC timestamp when request was sent by Aicon in ISO8601 format</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="requestSendTsMillis" type="xs:long" use="required">
+				<xs:annotation>
+					<xs:documentation>Same timestamp in millis since epoch</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="cdcTables" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>CSV list of table names to get last generated gkey+creation time for</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="aicon-tos-canary-response">
+		<xs:annotation>
+			<xs:documentation>Canary response from TOS</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="requestId" type="xs:string" use="required">
+				<xs:annotation>
+					<xs:documentation>echoed from the request.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="sequence" type="xs:long" use="required">
+				<xs:annotation>
+					<xs:documentation>echoed from the request</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="requestSendTs" type="xs:dateTime" use="required">
+				<xs:annotation>
+					<xs:documentation>timestamp (UTC in ISO8601 format) when request was sent by AICON</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="requestSendTsMillis" type="xs:long" use="required">
+				<xs:annotation>
+					<xs:documentation>same but now in millis since epoch</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="requestReceivedTs" type="xs:dateTime" use="required">
+				<xs:annotation>
+					<xs:documentation>timestamp (UTC in IO8601 format) when request was received by the TOS</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="requestReceivedTsMillis" type="xs:long" use="required">
+				<xs:annotation>
+					<xs:documentation>same but now in millis since epoch</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="responseSendTs" type="xs:dateTime" use="required">
+				<xs:annotation>
+					<xs:documentation>timestamp (UTC in ISO8601 format) just before canary is saved and response is sent back  </xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="responseSendTsMillis" type="xs:long" use="required">
+				<xs:annotation>
+					<xs:documentation>same but now in millis since epoch</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="responseReceivedTs" type="xs:dateTime">
+				<xs:annotation>
+					<xs:documentation>timestamp (UTC in ISO8601 format) when response is received by AICON</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="responseReceivedTsMillis" type="xs:long">
+				<xs:annotation>
+					<xs:documentation>same but now in millis since epoch</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="latestCdcCreations">
+				<xs:annotation>
+					<xs:documentation>CSV list of latest record creations of selected tables in the format {[table]=[gkey]:[created_millis][,,....]}</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="aicon-tos-control-request">
+		<xs:annotation>
+			<xs:documentation>Request send to TOS to change settings or perform actions</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence maxOccurs="unbounded">
+				<xs:element name="propertyGroup">
+					<xs:complexType>
+						<xs:sequence maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>Navis: supports max 6</xs:documentation>
+							</xs:annotation>
+							<xs:element name="property">
+								<xs:complexType>
+									<xs:attribute name="key" use="required">
+										<xs:annotation>
+											<xs:documentation>The key of the property to set</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="value">
+										<xs:annotation>
+											<xs:documentation>the value of the property to set (when omitted will not be updated but allows to skip to the next property).</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="ignore" use="optional">
+										<xs:annotation>
+											<xs:documentation>the value of the property indicate whether or not to ignore this property.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="groupName" use="required">
+							<xs:annotation>
+								<xs:documentation>Navis: maps to General Reference.Type</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="requestId" type="xs:string" use="required"/>
+			<xs:attribute name="requestTs" type="xs:dateTime" use="required"/>
+			<xs:attribute name="ignore" type="xs:boolean" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="aicon-tos-control-response">
+		<xs:annotation>
+			<xs:documentation>Response informing Aicon about result of updates</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence maxOccurs="unbounded">
+				<xs:element name="propertyGroup">
+					<xs:complexType>
+						<xs:sequence minOccurs="0" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>Navis: supports max 6</xs:documentation>
+							</xs:annotation>
+							<xs:element name="property">
+								<xs:complexType>
+									<xs:attribute name="key" use="required">
+										<xs:annotation>
+											<xs:documentation>The key of the property set</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attributeGroup ref="result"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="groupName" use="required">
+							<xs:annotation>
+								<xs:documentation>Navis: maps to General Reference.Type</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attributeGroup ref="result"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="requestId" type="xs:string" use="required"/>
+			<xs:attribute name="responseTs" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="aicon-tos-error-response">
+		<xs:annotation>
+			<xs:documentation>Response to any error that wouldn't fit in a normal response (e.g. message problem)</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attributeGroup ref="result"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="aicon-yard-decking-update-request">
+		<xs:annotation>
+			<xs:documentation>Request from yardsight to deck (change position) of 1 or more moves.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="moves">
+					<xs:annotation>
+						<xs:documentation>All moves belonging to a single physical handling like twin carry.</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence maxOccurs="unbounded">
+							<xs:element name="deckMove">
+								<xs:complexType>
+									<xs:sequence minOccurs="0">
+										<xs:element ref="map"/>
+									</xs:sequence>
+									<xs:attribute name="wiGkey" use="required">
+										<xs:annotation>
+											<xs:documentation>The gkey of the WorkInstruction</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="positionTo" type="xs:string" use="required">
+										<xs:annotation>
+											<xs:documentation>new planned position in customer specific format</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="requestId" type="xs:string" use="required">
+				<xs:annotation>
+					<xs:documentation>id of the request itself, to be echoed back within the response to match it against</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="timeStamp" type="xs:long" use="required">
+				<xs:annotation>
+					<xs:documentation>time the request was sent in millis</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="timeStampLocalTimeISO8601" type="xs:dateTime" use="required">
+				<xs:annotation>
+					<xs:documentation>time the request was sent in local ISO8601 format incl. ms</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="aicon-yard-decking-update-response">
+		<xs:annotation>
+			<xs:documentation>Response to a yardsight decking request</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="moves" minOccurs="0" maxOccurs="1">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="deckMove" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:attribute name="wiGkey" use="required"/>
+									<xs:attributeGroup ref="result"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="requestId" type="xs:string" use="required">
+				<xs:annotation>
+					<xs:documentation>The requestId from the request this response belongs to.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="timeStampLocalTimeISO8601" type="xs:dateTime" use="required">
+				<xs:annotation>
+					<xs:documentation>time the response was sent in local ISO8601 format incl. ms</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="timeStamp" type="xs:long" use="required">
+				<xs:annotation>
+					<xs:documentation>time the request was sent in millis</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attributeGroup ref="result"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="aicon-yard-move-request">
+		<xs:annotation>
+			<xs:documentation>Request from yardsight to execute 1 or more moves</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="workQueue" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence minOccurs="0">
+							<xs:element ref="map" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>A map of key-value pairs for temporary interface enhancements only</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:choice minOccurs="0" maxOccurs="unbounded">
+								<xs:element name="addMove">
+									<xs:complexType>
+										<xs:sequence minOccurs="0">
+											<xs:element ref="map"/>
+										</xs:sequence>
+										<xs:attribute name="containerId" use="required">
+											<xs:annotation>
+												<xs:documentation>ISO6346 container identification</xs:documentation>
+											</xs:annotation>
+										</xs:attribute>
+										<xs:attribute name="positionTo" type="xs:string" use="required">
+											<xs:annotation>
+												<xs:documentation>new planned position in customer specific format</xs:documentation>
+											</xs:annotation>
+										</xs:attribute>
+										<xs:attribute name="positionFrom">
+											<xs:annotation>
+												<xs:documentation>When given will be matched against tos current pos; expect it in the same format as positionTo</xs:documentation>
+											</xs:annotation>
+										</xs:attribute>
+										<xs:attribute name="moveSequence" type="xs:long">
+											<xs:annotation>
+												<xs:documentation>defines the order of the moves we have to create in, sequence doesn't need to be received in order of appearance</xs:documentation>
+											</xs:annotation>
+										</xs:attribute>
+										<xs:attribute name="moveType">
+											<xs:annotation>
+												<xs:documentation>Defines the type of planned move created by the housekeeping module, no direct relation with TOS field.</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:enumeration value="HOUSEKEEPING"/>
+													<xs:enumeration value="PREPOSITIONING"/>
+													<xs:enumeration value="CLEARING"/>
+													<xs:enumeration value="REHANDLE"/>
+													<xs:enumeration value="INTERMEDIATE"/>
+													<xs:enumeration value="INTERIO"/>
+													<xs:enumeration value="NONE"/>
+													<xs:enumeration value="UNKNOWN"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:attribute>
+										<xs:attribute name="moveKind">
+											<xs:annotation>
+												<xs:documentation>The kind of move for the created WorkInstruction. Defaults to YARD when not given.</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:enumeration value="YARD"/>
+													<xs:enumeration value="SHFT"/>
+													<xs:enumeration value="RECV"/>
+													<xs:enumeration value="DLVR"/>
+													<xs:enumeration value="DSCH"/>
+													<xs:enumeration value="LOAD"/>
+													<xs:enumeration value="RDSC"/>
+													<xs:enumeration value="RLOD"/>
+													<xs:enumeration value="SHOB"/>
+													<xs:enumeration value="OTHR"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:attribute>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="deleteMove">
+									<xs:complexType>
+										<xs:sequence minOccurs="0">
+											<xs:element ref="map"/>
+										</xs:sequence>
+										<xs:attribute name="wiGkey" use="required">
+											<xs:annotation>
+												<xs:documentation>The gkey of the WorkInstruction</xs:documentation>
+											</xs:annotation>
+										</xs:attribute>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="updateMove">
+									<xs:complexType>
+										<xs:sequence minOccurs="0">
+											<xs:element ref="map"/>
+										</xs:sequence>
+										<xs:attribute name="wiGkey" use="required">
+											<xs:annotation>
+												<xs:documentation>The gkey of the WorkInstruction</xs:documentation>
+											</xs:annotation>
+										</xs:attribute>
+										<xs:attribute name="positionTo" type="xs:string">
+											<xs:annotation>
+												<xs:documentation>new planned position in customer specific format</xs:documentation>
+											</xs:annotation>
+										</xs:attribute>
+										<xs:attribute name="priority" type="xs:boolean">
+											<xs:annotation>
+												<xs:documentation>Gives this move a priority when set to true (falso does not remove priority).</xs:documentation>
+											</xs:annotation>
+										</xs:attribute>
+									</xs:complexType>
+								</xs:element>
+							</xs:choice>
+						</xs:sequence>
+						<xs:attribute name="wqName" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>Name of the work queue</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="wqType" default="YARD">
+							<xs:annotation>
+								<xs:documentation>To be set when work queue needs to be created</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="DISCH"/>
+									<xs:enumeration value="LOAD"/>
+									<xs:enumeration value="YARD"/>
+									<xs:enumeration value="PROJECTION"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="powName" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>PointOfWork name, needed when workQueue needs to be created</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="powPushRate" type="xs:long" default="30">
+							<xs:annotation>
+								<xs:documentation>in moves/hour</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="chePoolName" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>Che Pool name, needed when POW needs to be created</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="shiftName" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>Crane shift name, needed when POW needs to be created</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="allowCreation" type="xs:boolean" default="true">
+							<xs:annotation>
+								<xs:documentation>when true allows workQueue creation</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="allowActivation" type="xs:boolean" default="true">
+							<xs:annotation>
+								<xs:documentation>when true allows workQueue activation</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="requestId" type="xs:string" use="required">
+				<xs:annotation>
+					<xs:documentation>id of the request itself, to be echoed back within the response to match it against</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="timeStamp" type="xs:long" use="required">
+				<xs:annotation>
+					<xs:documentation>time the request was sent in millis</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="timeStampLocalTimeISO8601" type="xs:dateTime" use="required">
+				<xs:annotation>
+					<xs:documentation>time the request was sent in local ISO8601 format incl. ms</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="jobRequestId" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>The id of the housekeeping job</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="moveRequestNumber" type="xs:long">
+				<xs:annotation>
+					<xs:documentation>Sequence of moveRequest within the same job.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="aicon-yard-move-response">
+		<xs:annotation>
+			<xs:documentation>Response to a yardsight move request</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence minOccurs="0" maxOccurs="unbounded">
+				<xs:element name="workQueue">
+					<xs:complexType>
+						<xs:choice minOccurs="0" maxOccurs="unbounded">
+							<xs:element name="addMove">
+								<xs:complexType>
+									<xs:attributeGroup ref="result"/>
+									<xs:attribute name="containerId" use="required">
+										<xs:annotation>
+											<xs:documentation>The container isoId</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="wiGkey">
+										<xs:annotation>
+											<xs:documentation>the gkey of the created WorkInstruction, to be used in the wiGkey when it needs to be deleted or updated.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="wiSequence" type="xs:long">
+										<xs:annotation>
+											<xs:documentation>will be the sequence of the WI created (can be different from the moveSequence)</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="deleteMove">
+								<xs:complexType>
+									<xs:attributeGroup ref="result"/>
+									<xs:attribute name="wiGkey" use="required"/>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="updateMove">
+								<xs:complexType>
+									<xs:attributeGroup ref="result"/>
+									<xs:attribute name="wiGkey" use="required"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:choice>
+						<xs:attribute name="wqName" use="required">
+							<xs:annotation>
+								<xs:documentation>The name of the workQueue</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attributeGroup ref="result"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="requestId" type="xs:string" use="required">
+				<xs:annotation>
+					<xs:documentation>The requestId from the request this response belongs to.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="timeStampLocalTimeISO8601" type="xs:dateTime" use="required">
+				<xs:annotation>
+					<xs:documentation>time the response was sent in local ISO8601 format incl. ms</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="timeStamp" type="xs:long" use="required">
+				<xs:annotation>
+					<xs:documentation>time the request was sent in millis</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="jobRequestId" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Echoed from the request.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="moveRequestNumber" type="xs:long">
+				<xs:annotation>
+					<xs:documentation>Echoed back from the request</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attributeGroup ref="result"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="aicon-dispatch-move-update-request">
+		<xs:annotation>
+			<xs:documentation>Request from dispatch to update 1 or more moves (multiple only for the same cheId, e.g. for twin/quad moves)</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="moves">
+					<xs:complexType>
+						<xs:choice maxOccurs="unbounded">
+							<xs:element name="updateMove">
+								<xs:annotation>
+									<xs:documentation>In case of twin/quad moves, handled by the same CHE at once, you can have multiple elements.</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence minOccurs="0">
+										<xs:element ref="map"/>
+									</xs:sequence>
+									<xs:attribute name="wiGkey" use="required">
+										<xs:annotation>
+											<xs:documentation>The gkey of the WorkInstruction</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="moveStage">
+										<xs:annotation>
+											<xs:documentation>The connectorState/stage of the move, when processed by ECS, limitations to change may happen.</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:enumeration value="NONE"/>
+												<xs:enumeration value="PLANNED"/>
+												<xs:enumeration value="CARRY_READY"/>
+												<xs:enumeration value="FETCH_UNDERWAY"/>
+												<xs:enumeration value="CARRY_UNDERWAY"/>
+												<xs:enumeration value="CARRY_COMPLETE"/>
+												<xs:enumeration value="PUT_UNDERWAY"/>
+												<xs:enumeration value="PUT_COMPLETE"/>
+												<xs:enumeration value="COMPLETE"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+									<xs:attribute name="positionToType">
+										<xs:annotation>
+											<xs:documentation>The type of the to position, see list</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:enumeration value="ITV"/>
+												<xs:enumeration value="RAIL"/>
+												<xs:enumeration value="TRUCK"/>
+												<xs:enumeration value="YARD"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+									<xs:attribute name="positionTo" type="xs:string">
+										<xs:annotation>
+											<xs:documentation>destination for this specific move in customer specific format</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="cheId" type="xs:string" use="optional">
+										<xs:annotation>
+											<xs:documentation>Id of the Che who is completing this move. Note: Right now this is used only for move completion. i.e., for movesStage=COMPLETE.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="priority" type="xs:boolean">
+										<xs:annotation>
+											<xs:documentation>Gives this move a priority when set to true (falso does not remove priority).</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+						</xs:choice>
+						<xs:attribute name="cheId" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>Id of the Che which is performing the move.</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="requestId" type="xs:string" use="required">
+				<xs:annotation>
+					<xs:documentation>id of the request itself, to be echoed back within the response to match it against</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="timeStamp" type="xs:long" use="required">
+				<xs:annotation>
+					<xs:documentation>time the request was sent in millis</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="timeStampLocalTimeISO8601" type="xs:dateTime" use="required">
+				<xs:annotation>
+					<xs:documentation>time the request was sent in local ISO8601 format incl. ms</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="aicon-dispatch-move-update-response">
+		<xs:annotation>
+			<xs:documentation>Response to a dispatch move update request</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence minOccurs="0">
+				<xs:element name="moves">
+					<xs:complexType>
+						<xs:choice maxOccurs="unbounded">
+							<xs:element name="updateMove">
+								<xs:complexType>
+									<xs:attribute name="wiGkey" use="required"/>
+									<xs:attributeGroup ref="result"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:choice>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="requestId" type="xs:string" use="required">
+				<xs:annotation>
+					<xs:documentation>The requestId from the request this response belongs to.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="timeStampLocalTimeISO8601" type="xs:dateTime" use="required">
+				<xs:annotation>
+					<xs:documentation>time the response was sent in local ISO8601 format incl. ms</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="timeStamp" type="xs:long" use="required">
+				<xs:annotation>
+					<xs:documentation>time the request was sent in millis</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attributeGroup ref="result"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="aicon-gate-block-quota-update-request">
+		<xs:annotation>
+			<xs:documentation>Request to change the gate appointment block quoata's for appointments.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="appt-ruleset">
+					<xs:complexType>
+						<xs:choice maxOccurs="unbounded">
+							<xs:element name="appt-rule">
+								<xs:annotation>
+									<xs:documentation>the appointment rule to lookup</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence maxOccurs="unbounded">
+										<xs:element name="appt-block-quota">
+											<xs:complexType>
+												<xs:attribute name="blockId" type="xs:string" use="required">
+													<xs:annotation>
+														<xs:documentation>The id of the block as known to the TOS</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="quota" type="xs:integer" use="required">
+													<xs:annotation>
+														<xs:documentation>The number of appointments</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="ruleId" type="xs:string" use="required">
+										<xs:annotation>
+											<xs:documentation>The Id of the rule to lookup</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+						</xs:choice>
+						<xs:attribute name="rulesetId" type="xs:string" use="required">
+							<xs:annotation>
+								<xs:documentation>Id of the appointment ruleset</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="requestId" type="xs:string" use="required">
+				<xs:annotation>
+					<xs:documentation>id of the request itself, to be echoed back within the response to match it against</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="timeStamp" type="xs:long" use="required">
+				<xs:annotation>
+					<xs:documentation>time the request was sent in millis</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="timeStampLocalTimeISO8601" type="xs:dateTime" use="required">
+				<xs:annotation>
+					<xs:documentation>time the request was sent in local ISO8601 format incl. ms</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="aicon-gate-block-quota-update-response">
+		<xs:annotation>
+			<xs:documentation>Response of the aicon-gate-block-quota-update-request</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="appt-ruleset">
+					<xs:complexType>
+						<xs:choice minOccurs="0" maxOccurs="unbounded">
+							<xs:element name="appt-rule">
+								<xs:annotation>
+									<xs:documentation>the appointment rule to lookup</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence minOccurs="0" maxOccurs="unbounded">
+										<xs:element name="appt-block-quota">
+											<xs:complexType>
+												<xs:attribute name="blockId" type="xs:string" use="required">
+													<xs:annotation>
+														<xs:documentation>The id of the block as known to the TOS</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="quota" type="xs:integer" use="required">
+													<xs:annotation>
+														<xs:documentation>The number of appointments</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attributeGroup ref="result"/>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="ruleId" type="xs:string" use="required">
+										<xs:annotation>
+											<xs:documentation>The Id of the rule to lookup</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attributeGroup ref="result"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:choice>
+						<xs:attribute name="rulesetId" type="xs:string" use="required">
+							<xs:annotation>
+								<xs:documentation>Id of the appointment ruleset</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attributeGroup ref="result"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="requestId" type="xs:string" use="required">
+				<xs:annotation>
+					<xs:documentation>id of the request itself, to be echoed back within the response to match it against</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="timeStamp" type="xs:long" use="required">
+				<xs:annotation>
+					<xs:documentation>time the request was sent in millis</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="timeStampLocalTimeISO8601" type="xs:dateTime" use="required">
+				<xs:annotation>
+					<xs:documentation>time the request was sent in local ISO8601 format incl. ms</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="map">
+		<xs:annotation>
+			<xs:documentation>A map of key-value pairs for temporary interface enhancements only</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence maxOccurs="unbounded">
+				<xs:element name="pair">
+					<xs:complexType>
+						<xs:attribute name="key" type="xs:string" use="required"/>
+						<xs:attribute name="value" type="xs:string" use="required"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:attributeGroup name="result">
+		<xs:attribute name="resultLevel" use="optional">
+			<xs:annotation>
+				<xs:documentation>The result level</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="OK"/>
+					<xs:enumeration value="INFO"/>
+					<xs:enumeration value="WARN"/>
+					<xs:enumeration value="ERROR"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="resultAudience" use="optional">
+			<xs:annotation>
+				<xs:documentation>The intended audience for this error, set:
+                    USER when an end-user could fix the problem (e.g. a configuration issue)
+                    SYSTEM when a system error has occurred (e.g. a db problem)
+                    ALL should be notified</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="USER"/>
+					<xs:enumeration value="SYSTEM"/>
+					<xs:enumeration value="ALL"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="resultCode" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>a predefined label describing the error (allows language dependent translation)</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="resultText" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>Any free text describing the result</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:attributeGroup>
+</xs:schema>

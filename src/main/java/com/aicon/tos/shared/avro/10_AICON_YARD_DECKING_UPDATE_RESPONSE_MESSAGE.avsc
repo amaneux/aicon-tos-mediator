@@ -1,0 +1,39 @@
+{
+  "namespace": "com.aicon.tos.shared.schema",
+  "type": "record",
+  "name": "AiconYardDeckingUpdateResponseMessage",
+  "fields": [
+    {
+      "name": "requestId",
+      "type": "string",
+      "doc": "The requestId from the request this response belongs to."
+    },
+    {
+      "name": "timeStampLocalTimeISO8601",
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-millis"
+      }
+    },
+    {
+      "name": "timeStamp",
+      "type": "long",
+      "doc": "Time the request was sent in milliseconds."
+    },
+    {
+      "name": "result",
+      "type": [
+        "null",
+        "com.aicon.tos.shared.schema.Result"
+      ]
+    },
+    {
+      "name": "moves",
+      "type": {
+        "type": "array",
+        "items": "com.aicon.tos.shared.schema.DeckMove"
+      },
+      "doc": "All moves belonging to a single physical handling, like a twin carry."
+    }
+  ]
+}

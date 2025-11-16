@@ -1,0 +1,10 @@
+{
+  "namespace": "com.aicon.tos.shared.schema",
+  "type": "record",
+  "name": "AiconUserControlMessage",
+  "fields": [
+    {"name": "id", "type": "string"},
+    {"name": "user_operating_mode", "type": "UserOperatingMode"},
+    {"name": "ignore", "type": "boolean", "default": true}
+  ]
+}

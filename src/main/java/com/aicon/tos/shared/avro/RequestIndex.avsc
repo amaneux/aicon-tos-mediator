@@ -1,0 +1,11 @@
+{
+  "type": "record",
+  "name": "requestIndex",
+  "namespace": "com.aicon.tos.shared.schema",
+  "fields": [
+    {
+      "name": "request_index",
+      "type": "string"
+    }
+  ]
+}

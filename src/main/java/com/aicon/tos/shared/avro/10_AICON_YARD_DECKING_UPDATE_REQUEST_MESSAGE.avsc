@@ -1,0 +1,43 @@
+{
+  "namespace": "com.aicon.tos.shared.schema",
+  "type": "record",
+  "name": "AiconYardDeckingUpdateRequestMessage",
+  "fields": [
+    {
+      "name": "requestId",
+      "type": "string",
+      "doc": "ID of the request itself, to be echoed back within the response to match it against."
+    },
+    {
+      "name": "timeStamp",
+      "type": "long",
+      "doc": "Time the request was sent in milliseconds."
+    },
+    {
+      "name": "timeStampLocalTimeISO8601",
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-millis"
+      }
+    },
+    {
+      "name": "moves",
+      "type": {
+        "type": "array",
+        "items": "com.aicon.tos.shared.schema.DeckMove"
+      },
+      "doc": "All moves belonging to a single physical handling, like a twin carry."
+    },
+    {
+      "name": "validations",
+      "type": [
+        "null",
+        {
+          "type": "array",
+          "items": "com.aicon.tos.shared.schema.Condition"
+        }
+      ],
+      "doc": "Optional extra conditions the groovy needs to validate on top of the base validations."
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "namespace": "com.aicon.tos.shared.schema",
+  "type": "record",
+  "name": "AiconTosControlMessage",
+  "fields": [
+    {"name": "id", "type": "string"},
+    {"name": "operating_mode", "type": "OperatingMode"},
+    {"name": "time_sync", "type":  "long", "default": 0},
+    {"name": "comment", "type": "string", "default": ""},
+    {"name": "ignore", "type": "boolean", "default": true}
+  ]
+}

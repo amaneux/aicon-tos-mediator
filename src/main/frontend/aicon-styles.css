@@ -1,0 +1,33 @@
+/* Standard style for non selected tabs */
+.outlined-tabs vaadin-tab {
+    padding: 10px;
+    border: 2px solid transparent;
+}
+
+.outlined-tabs vaadin-tab[selected]::part(tab) {
+    border: 2px solid black;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.multiline-cell {
+    white-space: pre-line;
+}
+
+.left-aligned-list {
+    text-align: left;
+}
+
+[part~="header-cell"] {
+    background-color: black;
+    color: white;
+    font-weight: bold;
+}
+
+.row-odd {
+    background-color: azure;
+}
+
+.row-even {
+    background-color: white;
+}

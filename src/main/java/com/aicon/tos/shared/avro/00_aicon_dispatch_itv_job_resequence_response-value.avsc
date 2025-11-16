@@ -1,0 +1,33 @@
+{
+  "type": "record",
+  "name": "itv_job_resequence_response_value",
+  "namespace": "com.avlino.aicon.ITVJobResequenceResponse",
+  "fields": [
+    {
+      "name": "APIIdentifier",
+      //      "type": "int", // TODO THis must be the type, until PNC stops sending null values we use this
+      "type": ["null", "int"]
+    },
+    {
+      "name": "requestIdx",
+      "type": "string"
+    },
+    {
+      "name": "timestamp",
+      "type": {
+        "type": "long",
+        "connect.version": 1,
+        "connect.name": "org.apache.kafka.connect.data.Timestamp",
+        "logicalType": "timestamp-millis"
+      }
+    },
+    {
+      "name": "errCode",
+      "type": "int"
+    },
+    {
+      "name": "errMsg",
+      "type": "string"
+    }
+  ]
+}

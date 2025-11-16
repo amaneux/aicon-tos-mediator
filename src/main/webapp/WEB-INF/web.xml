@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
+                             https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
+         version="5.0">
+    <display-name>Avlino - TOS connect</display-name>
+
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+
+    <context-param>
+        <!-- Where to find the configuration file within folder set by ATC_BASE -->
+        <param-name>ATCinitFile</param-name>
+        <param-value>conf/atc_config.xml</param-value>
+    </context-param>
+    <context-param>
+        <!-- The logo of the terminal (will be copied from ATC_BASE/image to webapp/image if exists) -->
+        <param-name>TerminalLogo</param-name>
+        <param-value>image/terminal-logo.gif</param-value>
+    </context-param>
+
+    <!-- Servlet mapping -->
+    <servlet>
+        <servlet-name>init</servlet-name>
+        <servlet-class>com.aicon.tos.connect.web.InitServlet</servlet-class>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>init</servlet-name>
+        <url-pattern>/init</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet mapping for testing only -->
+    <servlet>
+        <servlet-name>TestEcho</servlet-name>
+        <servlet-class>com.aicon.tos.connect.web.mockup.TestEchoServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TestEcho</servlet-name>
+        <url-pattern>/TestEcho</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>SwapOnLoad</servlet-name>
+        <servlet-class>com.aicon.tos.connect.web.mockup.TestXMLServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SwapOnLoad</servlet-name>
+        <url-pattern>/swapOnLoad</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>ActivateWorkQueue</servlet-name>
+        <servlet-class>com.aicon.tos.connect.web.mockup.TestActivateWorkQueueServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ActivateWorkQueue</servlet-name>
+        <url-pattern>/activateWorkQueue</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CanaryMockupWebService</servlet-name>
+        <servlet-class>com.aicon.tos.connect.web.mockup.CananyMockupWebService</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CanaryMockupWebService</servlet-name>
+        <url-pattern>/CanaryMockupWebService</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ControlMockupWebService</servlet-name>
+        <servlet-class>com.aicon.tos.connect.web.mockup.ControlMockupWebService</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ControlMockupWebService</servlet-name>
+        <url-pattern>/ControlMockupWebService</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>BasicJSONWebService</servlet-name>
+        <servlet-class>com.aicon.tos.connect.web.mockup.TestBasicJSONWebService</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>BasicJSONWebService</servlet-name>
+        <url-pattern>/basicJSONWebService</url-pattern>
+    </servlet-mapping>
+
+<!--    <context-param>-->
+<!--        <param-name>contextPath</param-name>-->
+<!--        <param-value>/aicon-tos-connect</param-value>-->
+<!--    </context-param>-->
+
+    <listener>
+        <listener-class>com.aicon.tos.connect.web.mockup.AiconTosControlAppListener</listener-class>
+    </listener>
+</web-app>

@@ -1,0 +1,109 @@
+{
+  "type": "record",
+  "name": "DeckingInputRequest",
+  "namespace": "com.avlino.aicon.actor.RealTimeEngineActor",
+  "fields": [
+    {
+      "name": "requestIndex",
+      "type": "string"
+    },
+    {
+      "name": "count",
+      "type": "int"
+    },
+    {
+      "name": "timeStamp",
+      "type": "long"
+    },
+    {
+      "name": "errorCode",
+      "type": [
+        "null",
+        "int"
+      ]
+    },
+    {
+      "name": "errorDesc",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "requests",
+      "type": {
+        "type": "array",
+        "items": {
+          "type": "record",
+          "name": "Request",
+          "fields": [
+            {
+              "name": "containerNumber",
+              "type": "string"
+            },
+            {
+              "name": "containerVisitId",
+              "type": "string"
+            },
+            {
+              "name": "jobType",
+              "type": "string"
+            },
+            {
+              "name": "uptUserId",
+              "type": "string"
+            },
+            {
+              "name": "programId",
+              "type": "string"
+            },
+            {
+              "name": "blockIndexNumber",
+              "type": "string"
+            },
+            {
+              "name": "bayIndexNumber",
+              "type": "string"
+            },
+            {
+              "name": "rowIndexNumber",
+              "type": "string"
+            },
+            {
+              "name": "tierIndexNumber",
+              "type": "string"
+            },
+            {
+              "name": "internalIndex1",
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            {
+              "name": "internalIndex2",
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            {
+              "name": "errorCode",
+              "type": [
+                "null",
+                "int"
+              ]
+            },
+            {
+              "name": "errorDesc",
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,186 @@
+{
+  "type": "record",
+  "name": "itv_job_resequence_request_value",
+  "namespace": "com.avlino.aicon.ITVJobResequenceRequest",
+  "doc": "ITV job re-sequence request message",
+  "fields": [
+    {
+      "name": "APIIdentifier",
+      "type": "int",
+      "default": 0
+    },
+    {
+      "name": "requestIdx",
+      "type": "string",
+      "default": "UNKNOWN"
+    },
+    {
+      "name": "timestamp",
+      "type": {
+        "type": "long",
+        "connect.version": 1,
+        "connect.name": "org.apache.kafka.connect.data.Timestamp",
+        "logicalType": "timestamp-millis"
+      }
+    },
+    {
+      "name": "requests",
+      "type": {
+        "type": "array",
+        "items": {
+          "type": "record",
+          "name": "requests",
+          "fields": [
+            {
+              "name": "QCId",
+              "type": "string",
+              "default": "UNKNOWN"
+            },
+            {
+              "name": "SeqCount",
+              "type": "int",
+              "default": 0
+            },
+            {
+              "name": "swaps",
+              "type": {
+                "type": "array",
+                "items": {
+                  "type": "record",
+                  "name": "swaps",
+                  "fields": [
+                    {
+                      "name": "ITVId",
+                      "type": "string",
+                      "default": "UNKNOWN"
+                    },
+                    {
+                      "name": "SequenceNo1",
+                      "type": [
+                        "null",
+                        "int"
+                      ]
+                    },
+                    {
+                      "name": "cntrNo1",
+                      "type": [
+                        "null",
+                        "string"
+                      ],
+                      "default": null
+                    },
+                    {
+                      "name": "cntrVisitId1",
+                      "type": [
+                        "null",
+                        "string"
+                      ],
+                      "default": null
+                    },
+                    {
+                      "name": "bayIdxNo1",
+                      "type": [
+                        "null",
+                        "string"
+                      ],
+                      "default": null
+                    },
+                    {
+                      "name": "StackIdxNo1",
+                      "type": [
+                        "null",
+                        "string"
+                      ],
+                      "default": null
+                    },
+                    {
+                      "name": "tierIdxNo1",
+                      "type": [
+                        "null",
+                        "string"
+                      ],
+                      "default": null
+                    },
+                    {
+                      "name": "SequenceNo2",
+                      "type": [
+                        "null",
+                        "int"
+                      ]
+                    },
+                    {
+                      "name": "cntrNo2",
+                      "type": [
+                        "null",
+                        "string"
+                      ],
+                      "default": null
+                    },
+                    {
+                      "name": "cntrVisitId2",
+                      "type": [
+                        "null",
+                        "string"
+                      ],
+                      "default": null
+                    },
+                    {
+                      "name": "bayIdxNo2",
+                      "type": [
+                        "null",
+                        "string"
+                      ],
+                      "default": null
+                    },
+                    {
+                      "name": "StackIdxNo2",
+                      "type": [
+                        "null",
+                        "string"
+                      ],
+                      "default": null
+                    },
+                    {
+                      "name": "tierIdxNo2",
+                      "type": [
+                        "null",
+                        "string"
+                      ],
+                      "default": null
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "uptUserId",
+              "type": "string",
+              "default": "UNKNOWN"
+            },
+            {
+              "name": "programId",
+              "type": "string",
+              "default": "UNKNOWN"
+            },
+            {
+              "name": "internalIdx1",
+              "type": [
+                "null",
+                "string"
+              ],
+              "default": null
+            },
+            {
+              "name": "internalIdx2",
+              "type": [
+                "null",
+                "string"
+              ],
+              "default": null
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "namespace": "com.aicon.tos.shared.schema",
+  "type": "record",
+  "name": "AiconTosControlRuleTableMessage",
+  "fields": [
+    {
+      "name": "rules",
+      "type": {
+        "type": "array",
+        "items": {
+          "type": "record",
+          "name": "OperatingModeRule",
+          "fields": [
+            {
+              "name": "currentConnectionStatus",
+              "type": [
+                "null",
+                "ConnectionStatus"
+              ],
+              "default": null
+            },
+            {
+              "name": "newConnectionStatus",
+              "type": [
+                "null",
+                "ConnectionStatus"
+              ],
+              "default": null
+            },
+            {
+              "name": "currentCdcOk",
+              "type": [
+                "null",
+                "boolean"
+              ],
+              "default": null
+            },
+            {
+              "name": "newCdcOk",
+              "type": [
+                "null",
+                "boolean"
+              ],
+              "default": null
+            },
+            {
+              "name": "currentUserOperatingMode",
+              "type": [
+                "null",
+                "UserOperatingMode"
+              ],
+              "default": null
+            },
+            {
+              "name": "newUserOperatingMode",
+              "type": [
+                "null",
+                "UserOperatingMode"
+              ],
+              "default": null
+            },
+            {
+              "name": "newOperatingMode",
+              "type": [
+                "null",
+                "OperatingMode"
+              ],
+              "default": null
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

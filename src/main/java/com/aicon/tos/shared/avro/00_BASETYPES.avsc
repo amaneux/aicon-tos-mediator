@@ -1,0 +1,125 @@
+[
+  {
+    "namespace": "com.aicon.tos.shared.schema",
+    "type": "enum",
+    "name": "ConnectionStatus",
+    "symbols": [
+      "OK",
+      "NOK"
+    ]
+  },
+  {
+    "namespace": "com.aicon.tos.shared.schema",
+    "type": "enum",
+    "name": "UserOperatingMode",
+    "symbols": [
+      "ON",
+      "OFF",
+      "AUTO",
+      "SHADOW"
+    ]
+  },
+  {
+    "namespace": "com.aicon.tos.shared.schema",
+    "type": "enum",
+    "name": "OperatingMode",
+    "symbols": [
+      "ON",
+      "OFF",
+      "SHADOW"
+    ]
+  },
+  {
+    "namespace": "com.aicon.tos.shared.schema",
+    "type": "record",
+    "name": "DeckMove",
+    "fields": [
+      {
+        "name": "wiGkey",
+        "type": [
+          "null",
+          {
+            "type": "string",
+            "doc": "The gkey of the WorkInstruction."
+          }
+        ]
+      },
+      {
+        "name": "positionTo",
+        "type": [
+          "null",
+          {
+            "type": "string",
+            "doc": "The new planned position in customer-specific format."
+          }
+        ]
+      },
+      {
+        "name": "result",
+        "type": [
+          "null",
+          "com.aicon.tos.shared.schema.Result"
+        ]
+      }
+    ]
+  },
+  {
+    "namespace": "com.aicon.tos.shared.schema",
+    "type": "record",
+    "name": "Condition",
+    "fields": [
+      {
+        "name": "field",
+        "type": [
+          "null",
+          {
+            "type": "string",
+            "doc": "The name of the field to validate."
+          }
+        ]
+      },
+      {
+        "name": "value",
+        "type": [
+          "null",
+          {
+            "type": "string",
+            "doc": "The condition for this field, - = disable validation."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "namespace": "com.aicon.tos.shared.schema",
+    "type": "record",
+    "name": "Result",
+      "fields": [
+        {
+          "name": "resultCode",
+        "type": ["null", "string"],
+        "default": null,
+          "doc": "The result code identifying the outcome."
+        },
+        {
+          "name": "resultText",
+        "type": ["null", "string"],
+        "default": null,
+          "doc": "The textual explanation of the result."
+        },
+        {
+          "name": "resultLevel",
+        "type": ["null", "string"],
+          "default": null,
+          "doc": "The result level for the response, nullable."
+        },
+        {
+          "name": "resultAudience",
+        "type": ["null", "string"],
+          "default": null,
+          "doc": "The audience level for the result, nullable."
+        }
+    ],
+    "doc": "A grouped object containing details about the result."
+  }
+]

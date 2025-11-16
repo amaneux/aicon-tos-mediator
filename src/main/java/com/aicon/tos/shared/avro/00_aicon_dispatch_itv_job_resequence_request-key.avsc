@@ -1,0 +1,24 @@
+{
+  "type": "record",
+  "name": "itv_job_resequence_request_key",
+  "namespace": "com.avlino.aicon.ITVJobResequenceRequest",
+  "fields": [
+    {
+      "name": "api_identifier",
+      "type": "int"
+    },
+    {
+      "name": "request_idx",
+      "type": "string"
+    },
+    {
+      "name": "timestamp",
+      "type": {
+        "type": "long",
+        "connect.version": 1,
+        "connect.name": "org.apache.kafka.connect.data.Timestamp",
+        "logicalType": "timestamp-millis"
+      }
+    }
+  ]
+}

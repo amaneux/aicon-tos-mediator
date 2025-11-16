@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- =========================================== -->
+<!-- Configuration file for Virginia Development -->
+<!-- =========================================== -->
+<Config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="schema/connect-configuration.xsd">
+    <General>
+        <GeneralItems>
+            <ConfigItem key="terminal.name" value="VIT" comment="Name of port"/>
+            <ConfigItem key="environment.name" value="DEV"
+                        comment="Environment should match env within the mediator hostname"/>
+            <ConfigItem key="yard.scope" value="VIT/VIT/VIG/PTM" comment="N4-scope: operator/complex/facility/yard"/>
+            <ConfigItem key="tos.position.schema" value="B3R3C1.T1"
+                        comment="Label schema, using: B=Block, R=Row, C=Column, T=Tier"/>
+            <ConfigItem key="email.hostname" value="smtp.gmail.com" comment=""/>
+            <ConfigItem key="email.smtpport" value="587" comment=""/>
+            <ConfigItem key="email.username" value="harrievanrijn@gmail.com" comment=""/>
+            <ConfigItem key="email.password" value="aueq vucf nptt tihl" comment=""/>
+            <ConfigItem key="email.sender" value="harrievanrijn@gmail.com" comment=""/>
+            <ConfigItem key="decking.engine.request.topic" value="aicon_decking_request_v2"/>
+            <ConfigItem key="decking.engine.response.topic" value="aicon_decking_response_v2"/>
+        </GeneralItems>
+    </General>
+    <Connections>
+        <Kafka name="TOS-KAFKA">
+            <ConfigItem key="hostname" value="vit-dev-kafka.avlino.az"
+                        comment="Hostname/IP-address of the kafka broker"/> <!-- ipc localhost -->
+            <ConfigItem key="hostport" value="9094" comment=""/>
+            <ConfigItem key="schema.registry.port" value="8081" comment="The port number of the schema registry"/>
+            <ConfigItem key="connection.timeout.ms" value="10000" comment="Max time it may to take to connect"/>
+            <ConfigItem key="group.id" value="aicon-tos-mediator"
+                        comment="Group id allows multiple consumers to read in parallel"/>
+            <ConfigItem key="poll.timeout.ms" value="1000" comment="Time for every poll session of the kafka stream"/>
+            <ConfigItem key="cdc.topic.prefix" value="tos.TN4USER."
+                        comment="The prefix to every tos-table given by the cdc connector."/>
+        </Kafka>
+        <Http name="TOS-N4">
+            <ConfigItem key="http.url" value="http://10.111.212.43:9081/apex/services/argobasicservice"
+                        comment="The URL of the HTTP receiver."/>
+            <ConfigItem key="http.username" value="admin" comment="The method to use for sending."/>
+            <ConfigItem key="http.password" value="admin" comment="The method to use for sending."/>
+            <ConfigItem key="http.method" value="POST" comment="The method to use for sending."/>
+            <ConfigItem key="http.content.type" value="xml" comment="The content type used for sending."/>
+            <ConfigItem key="http.connect.timeout.ms" value="5000" comment="The time it may take for connecting."/>
+            <ConfigItem key="http.read.timeout.ms" value="10000"
+                        comment="The time it may take for reading (incl.connection time)."/>
+            <ConfigItem key="transformer.class" value="com.aicon.tos.connect.http.transformers.SoapTransformer"
+                        comment="Transformer class to wrap the request and strip the response."/>
+        </Http>
+    </Connections>
+    <Flows>
+        <Flow name="ControlFlow">
+            <ConfigItem key="topic.source" value="AICON_TOS_CONTROL" comment="The source topic to subscribe to"/>
+            <ConfigItem key="topic.allow.create" value="true"/>
+            <ConfigItem key="topic.response.ok" value="aicon_tos_control_response"
+                        comment="The response topic to send to when a response has been received"/>
+            <ConfigItem key="topic.response.fail" value=""
+                        comment="The response topic to send to when connection failed (when empty, the ok response topic will be used."/>
+            <ConfigItem key="transformer.request" value=""
+                        comment="The transformer full classname (available on the classpath) to transform the request into a message the TOS accepts."/>
+            <ConfigItem key="transformer.response" value=""
+                        comment="The transformer full classname (available on the classpath) to transform the response into a message Avlino accepts."/>
+            <HttpRef ref="TOS-N4"/>
+            <KafkaRef ref="TOS-KAFKA"/>
+        </Flow>
+        <Flow name="DeckingUpdateFlow">
+            <ConfigItem key="topic.source" value="TOS_DECKING_UPDATE_REQUEST"
+                        comment="The source topic to subscribe to"/>
+            <ConfigItem key="topic.allow.create" value="true"/>
+            <ConfigItem key="topic.response.ok" value="TOS_DECKING_UPDATE_RESPONSE"
+                        comment="The response topic to send to when a response has been received"/>
+            <ConfigItem key="topic.response.fail" value=""
+                        comment="The response topic to send to when connection failed (when empty, the ok response topic will be used."/>
+            <ConfigItem key="transformer.request" value=""
+                        comment="The transformer full classname (available on the classpath) to transform the request into a message the TOS accepts."/>
+            <ConfigItem key="transformer.response" value=""
+                        comment="The transformer full classname (available on the classpath) to transform the response into a message Avlino accepts."/>
+            <HttpRef ref="TOS-N4"/>
+            <KafkaRef ref="TOS-KAFKA"/>
+        </Flow>
+    </Flows>
+    <TosControl>
+        <CanaryCheck name="Canary Check">
+            <ConfigItem key="canary.on.off" value="off"/>
+            <ConfigItem key="canary.interval.ms" value="12000"/>
+            <ConfigItem key="canary.cdc.frequency" value="6"/>
+            <CDCTable name="inv_move_event">
+                <ConfigItem key="topic.name" value="INV_MOVE_EVENT_MV"/>
+                <ConfigItem key="group.id" value="aicon-tos-mediator"/>
+                <ConfigItem key="cdc.threshold" value="5000"/>
+            </CDCTable>
+            <!--            <CDCTable name="inv_unit_fcy_visit">-->
+            <!--                <ConfigItem key="topic.name" value="INV_UNIT_FCY_VISIT_MV"/>-->
+            <!--                <ConfigItem key="group.id" value="aicon-tos-mediator"/>-->
+            <!--                <ConfigItem key="cdc.threshold" value="40000"/>-->
+            <!--            </CDCTable>-->
+            <CDCTable name="inv_wi">
+                <ConfigItem key="topic.name" value="INV_WI_MV"/>
+                <ConfigItem key="group.id" value="aicon-tos-mediator"/>
+                <ConfigItem key="cdc.threshold" value="4000"/>
+            </CDCTable>
+            <HttpRef ref="TOS-N4"/>
+            <KafkaRef ref="TOS-KAFKA"/>
+        </CanaryCheck>
+        <ControlRequest name="Control Request">  <!-- unused??? -->
+            <ConfigItem key="topic.source" value="aicon_tos_control" comment="tobefilled"/>
+            <ConfigItem key="topic.allow.create" value="true"/>
+            <ConfigItem key="group.id" value="aicon-tos-mediator-controlflow"/>
+            <HttpRef ref="TOS-N4"/>
+            <KafkaRef ref="TOS-KAFKA"/>
+        </ControlRequest>
+    </TosControl>
+    <Interceptors>
+        <InterceptorEntity name="inv_wi">
+            <ConfigItem key="topic.name" value="inv_wi" comment=""/>
+            <ConfigItem key="max.messages.in.storage" value="10000" comment=""/>
+            <ConfigItem key="max.time.in.storage" value="30" comment=""/>
+            <ConfigItem key="processing.delay" value="2000" comment=""/>
+            <ConfigItem key="test.creations" value="false" comment=""/>
+            <ConfigItem key="test.changes" value="false" comment=""/>
+            <ConfigItem key="test.deletions" value="false" comment=""/>
+        </InterceptorEntity>
+        <InterceptorEntity name="truck_transactions">
+            <ConfigItem key="topic.name" value="truck_transactions" comment=""/>
+            <ConfigItem key="max.messages.in.storage" value="5000" comment=""/>
+            <ConfigItem key="max.time.in.storage" value="30" comment=""/>
+            <ConfigItem key="processing.delay" value="1500" comment=""/>
+            <ConfigItem key="test.creations" value="true" comment=""/>
+            <ConfigItem key="test.changes" value="false" comment=""/>
+            <ConfigItem key="test.deletions" value="false" comment=""/>
+        </InterceptorEntity>
+    </Interceptors>
+</Config>

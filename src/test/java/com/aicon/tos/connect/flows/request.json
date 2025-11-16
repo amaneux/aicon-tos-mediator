@@ -1,0 +1,60 @@
+{
+  "APIIdentifier": 12345678,
+  "requestIdx": "abc",
+  "timestamp": 1730225595902,
+  "requests": [
+    {
+      "QCId": "QC53",
+      "SeqCount": 2,
+      "swaps": [
+        {
+          "ITVId": "ITV-12345",
+          "SequenceNo1": {
+            "int": 1
+          },
+          "cntrNo1": {
+            "string": "CNR-0001"
+          },
+          "cntrVisitId1": {
+            "string": "VISIT-001"
+          },
+          "bayIdxNo1": {
+            "string": "BAY-001"
+          },
+          "StackIdxNo1": {
+            "string": "STACK-001"
+          },
+          "tierIdxNo1": {
+            "string": "TIER-001"
+          },
+          "SequenceNo2": {
+            "int": 2
+          },
+          "cntrNo2": {
+            "string": "CNR-0002"
+          },
+          "cntrVisitId2": {
+            "string": "VISIT-002"
+          },
+          "bayIdxNo2": {
+            "string": "BAY-002"
+          },
+          "StackIdxNo2": {
+            "string": "STACK-002"
+          },
+          "tierIdxNo2": {
+            "string": "TIER-002"
+          }
+        }
+      ],
+      "uptUserId": "DGL",
+      "programId": "interface",
+      "internalIdx1": {
+        "string": "12345678"
+      },
+      "internalIdx2": {
+        "string": "12345678"
+      }
+    }
+  ]
+}
